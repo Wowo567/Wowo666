@@ -23,8 +23,8 @@ MonoBehaviour:
     prefab: {fileID: 0}
     position: {x: 0, y: 0, z: 0}
   - id: 12
-    bubble1: 13
-    bubble2: 0
+    bubble1: 0
+    bubble2: 13
     bubble3: 0
     bubble4: 0
     positionStr: -0.16;-0.41;0

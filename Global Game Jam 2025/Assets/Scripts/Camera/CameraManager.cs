@@ -24,12 +24,17 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
     }
 
     //[Button("ChangeCamera")]
-
     public void ChangeView()
     {
-
         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x, lookView, moveTime);
     }
+
+    public void Recover()
+    {
+        DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x, _initView, moveTime);
+        transform.DOMove(new Vector3(0,0,-10), moveTime);
+    }
+    
     public void ChangeCamera()
     {
         Vector3 offest;
@@ -39,8 +44,7 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
         }
         else
         {
-            offest =  ComicManager.Instance.curComic.transform.position - Vector3.zero;
-
+             offest =  ComicManager.Instance.curComic.transform.position - Vector3.zero;
         }
         
         transform.DOMove(transform.position + offest * moveParameter, moveTime);

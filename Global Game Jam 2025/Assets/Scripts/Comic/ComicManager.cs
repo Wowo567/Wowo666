@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Comic;
+using UI;
 using UnityEngine;
 using WowoFramework.Singleton;
 
@@ -16,7 +17,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         {
             if (_curComic != value)
             {
-                curComic = value;
+                _curComic = value;
                 CameraManager.Instance.ChangeCamera();
             }
         }
@@ -34,7 +35,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
         _comicItems = new ComicItem[5];
-        curComic = Instantiate(firstComic, transform).GetComponent<ComicItem>();
+        curComic = Instantiate(firstComic, PaperManager.Instance.curPaper).GetComponent<ComicItem>();
         _comicItems[0] = curComic;
         _index += 1;
         CameraManager.Instance.ChangeView();
@@ -44,7 +45,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         GameObject nextPrefab = _datasDic[id].prefab;
         lastComic = curComic;
-        curComic = Instantiate(nextPrefab, transform).GetComponent<ComicItem>();
+        curComic = Instantiate(nextPrefab, PaperManager.Instance.curPaper).GetComponent<ComicItem>();
         _comicItems[_index] = curComic;
         _index += 1;
     }

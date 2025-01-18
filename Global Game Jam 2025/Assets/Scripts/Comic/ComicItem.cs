@@ -28,7 +28,6 @@ namespace Comic
         public ComicType type;
         private ComicData _comicData;
         private ComicItem _nextComic;
-        private Dictionary<BubbleType, ComicItem> _nextComicItems = new Dictionary<BubbleType, ComicItem>();
         
         private ChatBubblePoint _point;
         private SpriteRenderer[] _grey, _color;
@@ -73,7 +72,24 @@ namespace Comic
         
         private void ClickTransition()
         {
+            Sequence sequence = DOTween.Sequence();
+            // 显示线稿并等待完成
+            sequence.AppendCallback(() => GreyShow(true,fadeTime))
+                .AppendInterval(fadeTime);  // 确保 fadeTime 时间结束
+
+            // 然后显示彩色内容
+            sequence.AppendCallback(() => ColorShow(true,fadeTime))
+                .AppendInterval(fadeTime);
             
+            //出现Continue
+            sequence.AppendCallback(() => ShowContinue());
+
+            CameraManager.Instance.Recover();
+        }
+
+        private void ShowContinue()
+        {
+            GameManager.Instance.ShowContinue();
         }
 
         private void Bubble()
