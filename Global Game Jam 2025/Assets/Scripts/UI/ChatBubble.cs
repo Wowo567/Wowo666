@@ -25,6 +25,12 @@ namespace UI
         private void Awake()
         {
             _collider2D = GetComponent<Collider2D>();
+
+            if (transform.parent!=null && transform.parent.GetComponent<ChatBubblePoint>())
+            {
+                ChatBubblePoint chatBubblePoint = transform.parent.GetComponent<ChatBubblePoint>();
+                LockToPoint(chatBubblePoint);
+            }
         }
 
         private void Update()
@@ -91,6 +97,7 @@ namespace UI
         {
             state = ChatBubbleState.Chat;
             
+            gameObject.SetActive(false);
             chatBubblePoint.Bubble(this);
             _curLockedPoint = chatBubblePoint;
             transform.DOMove(chatBubblePoint.transform.position, 0.2f);
@@ -138,7 +145,17 @@ namespace UI
         {
             if (state == ChatBubbleState.Chat)
             {
+                gameObject.SetActive(true);
                 GoHome();
+            }
+        }
+        
+        public void SetHold()
+        {
+            if (state == ChatBubbleState.Chat)
+            {
+                gameObject.SetActive(true);
+                state = ChatBubbleState.Hold;
             }
         }
 

@@ -8,6 +8,8 @@ namespace UI
 {
     public class ChatBubblePoint : MonoBehaviour
     {
+        public bool x = false;
+        
         [NonSerialized]
         public bool isUsed = false;
 
@@ -21,7 +23,10 @@ namespace UI
         
         private void Awake()
         {
-            ChatBubblePointManager.Instance.AddPoint(this);
+            if (!x)
+            {
+                ChatBubblePointManager.Instance.AddPoint(this);   
+            }
         }
 
         public void Init(List<BubbleType> validBubbleIDs)
@@ -40,11 +45,16 @@ namespace UI
             _curChatBubble = chatBubble;
             OnBubble?.Invoke(chatBubble.type);
             Debug.Log($"Bubble!!! {_curChatBubble.type}");
+            transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
         }
         
-        public void Release()
+        public void Release(bool isHold = false)
         {
             isUsed = false;
+            if (isHold)
+            {
+                _curChatBubble.SetHold();
+            }
             _curChatBubble.SetFree();
             _curChatBubble = null;
             OnBubbleRemove?.Invoke();
@@ -56,20 +66,21 @@ namespace UI
             if (canAcceptedBubbleIDs.Contains(type))
             {
                 transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f);
-                transform.GetComponent<SpriteRenderer>().color = Color.white;
             }
         }
 
         public void OnBubbleExit()
         {
             transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
-            transform.GetComponent<SpriteRenderer>().color = Color.gray;
         }
 
         private void OnDestroy()
         {
             _curChatBubble?.SetFree();
-            ChatBubblePointManager.Instance?.RemovePoint(this);
+            if (!x)
+            {
+                ChatBubblePointManager.Instance?.RemovePoint(this);   
+            }
         }
     }
 }

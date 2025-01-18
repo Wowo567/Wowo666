@@ -22,6 +22,7 @@ namespace UI
         {
             if(_isUsed) return;
             ChatBubbleManager.Instance.CreateChatBubble(this,chatBubblePrefab);
+            transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
             Bubble();
         }
 
