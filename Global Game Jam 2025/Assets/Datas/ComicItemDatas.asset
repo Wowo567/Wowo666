@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb09d1e77b49e4c8f89b11561dfa617d, type: 3}
+  m_Name: ComicItemDatas
+  m_EditorClassIdentifier: 
+  Datas:
+  - id: 1
+    bubble1: 1;1001
+    bubble2: 1;1001
+    bubble3: 1;1001
+    positionStr: 0;0;0
+    spriteName: name
+    sprite: {fileID: 0}
+    position: {x: 0, y: 0, z: 0}

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9d098d627064445795e123a7d0cfe70, type: 3}
+  m_Name: FaceDatas
+  m_EditorClassIdentifier: 
+  Datas:
+  - id: 1001
+    bubble1: 
+    bubble2: 
+    bubble3: 
+    positionStr: 
+    spriteName: name
+    sprite: {fileID: 0}
+    position: {x: 0, y: 0, z: 0}
