@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         continueButton.gameObject.SetActive(true);
     }
 
+    [Button]
     public void Continue()
     {
         PaperManager.Instance.ChangePaper();

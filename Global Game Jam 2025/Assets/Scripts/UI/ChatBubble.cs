@@ -103,7 +103,7 @@ namespace UI
             if (_curChatBubbleButton != null)
             {
                 RectTransform rectTransform = _curChatBubbleButton.GetComponent<RectTransform>();
-                Vector3 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, rectTransform.anchoredPosition);
+                Vector3 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, rectTransform.position);
 
                 if (Camera.main != null)
                 {
