@@ -51,11 +51,17 @@ namespace UI
         public void Release(bool isHold = false)
         {
             isUsed = false;
-            if (isHold)
+            if (_curChatBubble)
             {
-                _curChatBubble.SetHold();
+                if (isHold)
+                {
+                    _curChatBubble.SetHold();
+                }
+                else
+                {
+                    _curChatBubble.SetFree();
+                }
             }
-            _curChatBubble.SetFree();
             _curChatBubble = null;
             OnBubbleRemove?.Invoke();
             Debug.Log("ReleaseBubble!!!");
