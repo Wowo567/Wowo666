@@ -77,16 +77,14 @@ namespace UI
 
         private void ReleaseBubble()
         {
-            foreach (ChatBubblePoint chatBubblePoint in ChatBubblePointManager.Instance.points)
+            if (_curHoveredPoint != null)
             {
-                if (_collider2D.OverlapPoint(chatBubblePoint.transform.position))
-                {
-                    LockToPoint(chatBubblePoint);
-                    return;
-                }
+                LockToPoint(_curHoveredPoint);
             }
-
-            GoHome();
+            else
+            {
+                GoHome();   
+            }
         }
 
         private void LockToPoint(ChatBubblePoint chatBubblePoint)
@@ -104,7 +102,7 @@ namespace UI
             if (_curChatBubbleButton != null)
             {
                 RectTransform rectTransform = _curChatBubbleButton.GetComponent<RectTransform>();
-                Vector3 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, rectTransform.position);
+                Vector3 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, rectTransform.anchoredPosition);
 
                 if (Camera.main != null)
                 {
