@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ComicItemDatas
   m_EditorClassIdentifier: 
   datas:
-  - id: 0
-    bubble1: 1;1001
-    bubble2: 1;1001
-    bubble3: 1;1001
+  - id: 1
+    bubble1: 1
+    bubble2: 1
+    bubble3: 1
     positionStr: 0;0;0
     spriteName: name
     sprite: {fileID: 0}
