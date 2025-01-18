@@ -76,7 +76,6 @@ namespace Comic
             
         }
 
-
         private void Bubble()
         {
             //显示线稿
@@ -98,8 +97,8 @@ namespace Comic
             //消失
             GreyShow(false);
             ColorShow(false);
-
             CheckType();
+            CheckBubble();
         }
 
         private void GreyShow(bool isShow,float fadeTime = 0)
@@ -117,27 +116,50 @@ namespace Comic
                 item.DOFade(isShow ? 1 : 0, fadeTime);
             }
         }
-
         
         private void OnBubble(BubbleType type)
         {
             ColorShow(true,fadeTime);
             ShowNext(type);
-
-            //实例下一个漫画
-            // _nextComic = bubbleData.nextId;
-
         }
 
         private void ShowNext(BubbleType type)
         {
             int next = _comicData.nextComics[type];
-            ComicManager.Instance.CreateComic(next);
+            if (next == 0)
+            {
+                //没有故事线
+            }
+            else
+            {
+                ComicManager.Instance.CreateComic(next);
+            }
         }
 
         private void OnBubbleRemove()
         {
-        
+            Sequence sequence = DOTween.Sequence();
+            // 消失
+            sequence.AppendCallback(() => ColorShow(false,fadeTime))
+                .AppendInterval(fadeTime);
+            //移除之后的漫画
+            sequence.AppendCallback(() => ComicManager.Instance.RemoveComic(this));
+        }
+
+        public void Remove()
+        {
+            ColorShow(false,fadeTime);
+            GreyShow(false,fadeTime);
+            Sequence sequence = DOTween.Sequence();
+            // 消失
+            sequence.AppendInterval(fadeTime);
+            //移除这个漫画
+            sequence.AppendCallback(() => DestroyImmediate(gameObject));
+        }
+
+        private void CheckBubble()
+        {
+            //GetComponent(bubble)
         }
     }
 }
