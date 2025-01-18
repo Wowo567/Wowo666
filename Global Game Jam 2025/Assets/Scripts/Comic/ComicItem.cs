@@ -128,17 +128,37 @@ namespace Comic
 
         private void GreyShow(bool isShow,float fadeTime = 0)
         {
-            foreach (var item in _grey)
+            if (fadeTime == 0)
             {
-                item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                foreach (var item in _grey)
+                {
+                    item.GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, isShow ? 1 : 0);
+                }
+            }
+            else
+            {
+                foreach (var item in _grey)
+                {
+                    item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                }   
             }
         }
         
         private void ColorShow(bool isShow,float fadeTime = 0)
         {
-            foreach (var item in _color )
+            if (fadeTime == 0)
             {
-                item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                foreach (var item in _color)
+                {
+                    item.GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, isShow ? 1 : 0);
+                }
+            }
+            else
+            {
+                foreach (var item in _color )
+                {
+                    item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                }
             }
         }
         
