@@ -350,7 +350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac0fec28edcb4d409a29934dc9d4ac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  piecesParent: {fileID: 0}
+  lookView: 10
+  moveParameter: 0.3
+  moveTime: 0.5
 --- !u!114 &337926631
 MonoBehaviour:
   m_ObjectHideFlags: 0

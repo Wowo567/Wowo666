@@ -34,6 +34,9 @@ namespace Comic
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = _comicData.position;
             //_face = transform.Find("Face").GetComponent<SpriteRenderer>();
+            
+            //更改相机
+            CameraManager.Instance.ChangeCamera(this);
         
             _point = GetComponentInChildren<ChatBubblePoint>();
             _point.Init(_comicData.nextComics.Keys.ToList());
@@ -51,8 +54,6 @@ namespace Comic
             //实例下一个漫画
             // _nextComic = bubbleData.nextId;
             
-            //更改相机
-            CameraManager.Instance.ChangeCamera();
         }
 
         private void OnBubbleRemove()
