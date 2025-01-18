@@ -1,47 +1,73 @@
 using System;
+using System.Collections.Generic;
+using Comic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace UI
 {
     public class ChatBubblePoint : MonoBehaviour
     {
+        [NonSerialized]
         public bool isUsed = false;
 
-        public Action<int> OnBubble;
+        public Action<BubbleType> OnBubble;
         public Action OnBubbleRemove;
 
-        public ChatBubble curChatBubble;
+        [NonSerialized] private ChatBubble _curChatBubble;
+
+        private List<BubbleType> canAcceptedBubbleIDs = new List<BubbleType>();
         
         private void Awake()
         {
             ChatBubblePointManager.Instance.AddPoint(this);
         }
 
+        public void Init(List<BubbleType> validBubbleIDs)
+        {
+            canAcceptedBubbleIDs = validBubbleIDs;
+        }
+        
         public void Bubble(ChatBubble chatBubble)
         {
-            if (curChatBubble)
+            if (_curChatBubble)
             {
                 Release();
             }
             
             isUsed = true;
-            curChatBubble = chatBubble;
-            OnBubble?.Invoke(chatBubble.ID);
-            Debug.Log($"Bubble!!! {curChatBubble.ID}");
+            _curChatBubble = chatBubble;
+            OnBubble?.Invoke(chatBubble.type);
+            Debug.Log($"Bubble!!! {_curChatBubble.type}");
         }
         
         public void Release()
         {
             isUsed = false;
-            curChatBubble.SetFree();
-            curChatBubble = null;
+            _curChatBubble.SetFree();
+            _curChatBubble = null;
             OnBubbleRemove?.Invoke();
             Debug.Log("ReleaseBubble!!!");
         }
 
+        public void OnBubbleHover(BubbleType type)
+        {
+            if (canAcceptedBubbleIDs.Contains(type))
+            {
+                transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f);
+                transform.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
+
+        public void OnBubbleExit()
+        {
+            transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
+            transform.GetComponent<SpriteRenderer>().color = Color.gray;
+        }
+
         private void OnDestroy()
         {
-            curChatBubble?.SetFree();
+            _curChatBubble?.SetFree();
             ChatBubblePointManager.Instance?.RemovePoint(this);
         }
     }

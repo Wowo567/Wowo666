@@ -1,4 +1,5 @@
 using System;
+using Comic;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace UI
 {
     public class ChatBubble : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
     {
-        public int ID;
+        public BubbleType type;
         public ChatBubbleState state = ChatBubbleState.Free;
 
         private Collider2D _collider2D;
