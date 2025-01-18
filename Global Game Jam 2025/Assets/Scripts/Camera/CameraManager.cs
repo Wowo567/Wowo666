@@ -11,7 +11,6 @@ using WowoFramework.Singleton;
 
 public class CameraManager : MonoBehaviourSingleton<CameraManager>
 {
-    private ComicItem _lastComic, _curComic;
     private Camera _camera;
     public float lookView;
     public float moveParameter = 0.3f;
@@ -24,16 +23,26 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
         _initView = _camera.orthographicSize;
     }
 
-    [Button("ChangeCamera")]
-    public void ChangeCamera(ComicItem item)
-    {
-        _curComic = item;
-        if (_lastComic != null)
-        {
-            Vector3 offest = _curComic.transform.position - _lastComic.transform.position;
-            transform.DOMove(transform.position + offest * moveParameter, moveTime);
-        }
+    //[Button("ChangeCamera")]
 
-        _lastComic = _curComic;
+    public void ChangeView()
+    {
+
+        DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x, lookView, moveTime);
+    }
+    public void ChangeCamera()
+    {
+        Vector3 offest;
+        if (ComicManager.Instance.lastComic != null)
+        {
+             offest =  ComicManager.Instance.curComic.transform.position - ComicManager.Instance.lastComic.transform.position;
+        }
+        else
+        {
+            offest =  ComicManager.Instance.curComic.transform.position - Vector3.zero;
+
+        }
+        
+        transform.DOMove(transform.position + offest * moveParameter, moveTime);
     }
 }
