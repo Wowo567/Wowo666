@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Datas;
@@ -30,10 +31,20 @@ namespace Comic
         private ComicItem _nextComic;
         
         private ChatBubblePoint _point;
-        private GameObject[] _grey, _color;
+        private Grey[]  _grey;
+        private Color[]  _color;
 
         private float fadeTime = 0.3f;
-        
+
+        private void Awake()
+        {
+            _grey = transform.GetComponentsInChildren<Grey>();
+            _color = transform.GetComponentsInChildren<Color>();
+            //消失
+            GreyShow(false);
+            ColorShow(false);
+        }
+
         private void Start()
         {
             Init();
@@ -109,14 +120,8 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = _comicData.position;
-            _grey = GameObject.FindGameObjectsWithTag("Grey");
-            _color = GameObject.FindGameObjectsWithTag("Color");
      
-           // _grey = transform.Find("Content/Grey").GetComponentsInChildren<SpriteRenderer>();
-           // _color = transform.Find("Content/Color").GetComponentsInChildren<SpriteRenderer>();
-            //消失
-            GreyShow(false);
-            ColorShow(false);
+           
             CheckType();
             CheckBubble();
         }
