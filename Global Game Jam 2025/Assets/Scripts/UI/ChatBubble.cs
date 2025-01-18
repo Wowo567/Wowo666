@@ -25,12 +25,6 @@ namespace UI
         private void Awake()
         {
             _collider2D = GetComponent<Collider2D>();
-
-            if (transform.parent!=null && transform.parent.GetComponent<ChatBubblePoint>())
-            {
-                ChatBubblePoint chatBubblePoint = transform.parent.GetComponent<ChatBubblePoint>();
-                LockToPoint(chatBubblePoint);
-            }
         }
 
         private void Update()
@@ -93,7 +87,7 @@ namespace UI
             }
         }
 
-        private void LockToPoint(ChatBubblePoint chatBubblePoint)
+        public void LockToPoint(ChatBubblePoint chatBubblePoint)
         {
             state = ChatBubbleState.Chat;
             
@@ -167,6 +161,11 @@ namespace UI
         private void OnDestroy()
         {
             transform.DOKill();
+        }
+
+        public void SetChatBubbleButton(ChatBubbleButton unlockBubbleButton)
+        {
+            _curChatBubbleButton = unlockBubbleButton;
         }
     }
 
