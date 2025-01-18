@@ -22,8 +22,7 @@ namespace UI
         {
             if(_isUsed) return;
             ChatBubbleManager.Instance.CreateChatBubble(this,chatBubblePrefab);
-            transform.GetComponent<Image>().color = Color.gray;
-            _isUsed = true;
+            Bubble();
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -32,6 +31,12 @@ namespace UI
             transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
         }
 
+        public void Bubble()
+        {
+            transform.GetComponent<Image>().color = Color.gray;
+            _isUsed = true;
+        }
+        
         public void Release()
         {
             transform.GetComponent<Image>().color = Color.white;
