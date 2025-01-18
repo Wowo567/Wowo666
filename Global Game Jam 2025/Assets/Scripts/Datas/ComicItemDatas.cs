@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,11 +22,9 @@ public class ComicData
     public string bubble2;
     public string bubble3;
     public string positionStr;
-   // public string facePositionStr;
     public string spriteName;
     public Sprite sprite;
     public Vector3 position;
-   // public Vector3 facePosition;
     public Dictionary<BubbleType, Bubble> nextComics;
 }
 
@@ -35,50 +32,56 @@ public class ComicData
 public class ComicItemDatas : ScriptableObject
 {
     private const string imagePath = "Images/ComicItems/";
-    public List<ComicData> Datas;
+    public List<ComicData> datas;
+
+    private Dictionary<int, ComicData> datasDic;
 
     public Dictionary<int, ComicData> DatasDic => datasDic;
-    public Dictionary<int, ComicData> datasDic;
 
+    // 将字符串转换为 Vector3
     private Vector3 GetPosition(string str)
     {
-        // 拆分字符串
         string[] parts = str.Split(';');
-
-        // 转换为 float 类型
         float x = float.Parse(parts[0]);
         float y = float.Parse(parts[1]);
         float z = float.Parse(parts[2]);
-
         return new Vector3(x, y, z);
-
     }
 
+    // 初始化数据
     public void Init()
     {
         datasDic = new Dictionary<int, ComicData>();
-        foreach (var item in Datas)
+
+        foreach (var item in datas)
         {
-            item.sprite = Resources.Load(imagePath + item.spriteName) as Sprite;
-
-            // 创建 Vector3 对象
+            item.sprite = Resources.Load<Sprite>(imagePath + item.spriteName);
             item.position = GetPosition(item.positionStr);
-            //item.facePosition = GetPosition(item.facePositionStr);
 
-            Bubble bubble_1 = new Bubble(Int32.Parse(item.bubble1.Split(";")[0]),
-                Int32.Parse(item.bubble1.Split(";")[1]));
-            Bubble bubble_2 = new Bubble(Int32.Parse(item.bubble2.Split(";")[0]),
-                Int32.Parse(item.bubble2.Split(";")[1]));
-            Bubble bubble_3 = new Bubble(Int32.Parse(item.bubble3.Split(";")[0]),
-                Int32.Parse(item.bubble3.Split(";")[1]));
+            // 创建 Bubble 对象
+            Bubble bubble1 = CreateBubble(item.bubble1);
+            Bubble bubble2 = CreateBubble(item.bubble2);
+            Bubble bubble3 = CreateBubble(item.bubble3);
 
-            item.nextComics = new Dictionary<BubbleType, Bubble>();
-            item.nextComics.Add((BubbleType)1, bubble_1);
-            item.nextComics.Add((BubbleType)2, bubble_2);
-            item.nextComics.Add((BubbleType)3, bubble_3);
+            // 初始化 nextComics 字典
+            item.nextComics = new Dictionary<BubbleType, Bubble>
+            {
+                { (BubbleType)1, bubble1 },
+                { (BubbleType)2, bubble2 },
+                { (BubbleType)3, bubble3 }
+            };
 
+            // 将 item 添加到 datasDic 中
             datasDic.Add(item.id, item);
         }
     }
 
+    // 辅助方法：从字符串创建 Bubble 对象
+    private Bubble CreateBubble(string bubbleStr)
+    {
+        string[] parts = bubbleStr.Split(';');
+        int nextId = int.Parse(parts[0]);
+        int faceId = int.Parse(parts[1]);
+        return new Bubble(nextId, faceId);
+    }
 }
