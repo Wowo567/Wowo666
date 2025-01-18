@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb09d1e77b49e4c8f89b11561dfa617d, type: 3}
   m_Name: ComicItemDatas
   m_EditorClassIdentifier: 
-  Datas:
+  datas:
   - id: 1
     bubble1: 1;1001
     bubble2: 1;1001

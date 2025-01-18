@@ -14,10 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Datas:
   - id: 1001
-    bubble1: 
-    bubble2: 
-    bubble3: 
-    positionStr: 
     spriteName: name
     sprite: {fileID: 0}
-    position: {x: 0, y: 0, z: 0}

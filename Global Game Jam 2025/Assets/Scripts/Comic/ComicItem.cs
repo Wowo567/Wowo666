@@ -23,7 +23,7 @@ namespace Comic
         private SpriteRenderer _face;
         private ChatBubblePoint _point;
         
-        private void Awake()
+        private void Start()
         {
             Init();
         }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Datas
 {
+    [Serializable]
     public class BubbleData
     {
         public int nextId;
@@ -32,7 +33,7 @@ namespace Datas
     }
 
     [ExcelAsset]
-    public abstract class ComicItemDatas : ScriptableObject
+    public class ComicItemDatas : ScriptableObject
     {
         private const string imagePath = "Images/ComicItems/";
         public List<ComicData> datas;
