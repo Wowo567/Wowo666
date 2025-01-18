@@ -1,0 +1,126 @@
+using System;
+using DG.Tweening;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+namespace UI
+{
+    public class ChatBubble : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
+    {
+        public int ID;
+        public ChatBubbleState state = ChatBubbleState.Free;
+
+        private Collider2D _collider2D;
+
+        private ChatBubbleButton _curChatBubbleButton = null;
+        private ChatBubblePoint _curLockedPoint = null;
+
+        private void Awake()
+        {
+            _collider2D = GetComponent<Collider2D>();
+        }
+
+        private void Update()
+        {
+            if (state == ChatBubbleState.Hold)
+            {
+                Vector3 mousePosition = Input.mousePosition;
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                
+                transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    ReleaseBubble();
+                }
+            }
+        }
+
+        private void ReleaseBubble()
+        {
+            foreach (ChatBubblePoint chatBubblePoint in ChatBubblePointManager.Instance.points)
+            {
+                if (_collider2D.OverlapPoint(chatBubblePoint.transform.position))
+                {
+                    LockToPoint(chatBubblePoint);
+                    return;
+                }
+            }
+
+            GoHome();
+        }
+
+        private void LockToPoint(ChatBubblePoint chatBubblePoint)
+        {
+            state = ChatBubbleState.Chat;
+            
+            chatBubblePoint.Bubble(this);
+            _curLockedPoint = chatBubblePoint;
+            transform.DOMove(chatBubblePoint.transform.position, 0.2f);
+        }
+
+        public void GoHome()
+        {
+            state = ChatBubbleState.Free;
+            if (_curChatBubbleButton != null)
+            {
+                RectTransform rectTransform = _curChatBubbleButton.GetComponent<RectTransform>();
+                Vector3 screenPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, rectTransform.position);
+
+                if (Camera.main != null)
+                {
+                    Vector3 newPos = Camera.main.ScreenToWorldPoint(screenPosition);
+                    newPos.z = 0;
+                    
+                    transform.DOMove(newPos, 0.3f).OnComplete(() =>
+                    {
+                        Destroy(gameObject);
+                        _curChatBubbleButton.Release();
+                    });
+                }
+            }
+        }
+
+        public void SetHome(ChatBubbleButton chatBubbleButton)
+        {
+            state = ChatBubbleState.Hold;
+            _curChatBubbleButton = chatBubbleButton;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (state == ChatBubbleState.Chat)
+            {
+                state = ChatBubbleState.Hold;
+                _curLockedPoint.Release();
+                _curLockedPoint = null;
+            }
+        }
+        
+        public void SetFree()
+        {
+            if (state == ChatBubbleState.Chat)
+            {
+                GoHome();
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+
+        }
+
+        private void OnDestroy()
+        {
+            transform.DOKill();
+        }
+    }
+
+    public enum ChatBubbleState
+    {
+        Free,
+        Hold,
+        Chat,
+    }
+}
