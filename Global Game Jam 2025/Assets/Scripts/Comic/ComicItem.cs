@@ -30,7 +30,8 @@ namespace Comic
         private ComicItem _nextComic;
         
         private ChatBubblePoint _point;
-        private SpriteRenderer[] _grey, _color;
+        private GameObject[] _grey, _color;
+
         private float fadeTime = 0.3f;
         
         private void Start()
@@ -108,8 +109,11 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = _comicData.position;
-            _grey = transform.Find("Content/Grey").GetComponentsInChildren<SpriteRenderer>();
-            _color = transform.Find("Content/Color").GetComponentsInChildren<SpriteRenderer>();
+            _grey = GameObject.FindGameObjectsWithTag("Grey");
+            _color = GameObject.FindGameObjectsWithTag("Color");
+     
+           // _grey = transform.Find("Content/Grey").GetComponentsInChildren<SpriteRenderer>();
+           // _color = transform.Find("Content/Color").GetComponentsInChildren<SpriteRenderer>();
             //消失
             GreyShow(false);
             ColorShow(false);
@@ -121,7 +125,7 @@ namespace Comic
         {
             foreach (var item in _grey)
             {
-                item.DOFade(isShow ? 1 : 0, fadeTime);
+                item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
             }
         }
         
@@ -129,7 +133,7 @@ namespace Comic
         {
             foreach (var item in _color )
             {
-                item.DOFade(isShow ? 1 : 0, fadeTime);
+                item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
             }
         }
         
