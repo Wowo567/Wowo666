@@ -17,8 +17,10 @@ namespace Comic
     {
         public int id;
         private ComicData _comicData;
-        private Dictionary<int, ComicItem> _nextComicItems = new Dictionary<int, ComicItem>();
+        private ComicItem _nextComic;
+        private Dictionary<BubbleType, ComicItem> _nextComicItems = new Dictionary<BubbleType, ComicItem>();
 
+        private SpriteRenderer _face;
         private ChatBubblePoint _point;
         
         private void Awake()
@@ -31,18 +33,28 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = _comicData.position;
+            _face = transform.Find("Face").GetComponent<SpriteRenderer>();
         
             _point = GetComponentInChildren<ChatBubblePoint>();
             _point.Init(_comicData.nextComics.Keys.ToList());
             _point.OnBubble+= OnBubble;
             _point.OnBubbleRemove+= OnBubbleRemove;
         }
-
+        
         private void OnBubble(BubbleType type)
         {
+            BubbleData bubbleData = _comicData.nextComics[type];
             
+            //更改表情
+            Sprite faceSprite = DatasManager.Instance.faceDatas.DatasDic[bubbleData.faceId].sprite;
+            _face.sprite = faceSprite;
+            //实例下一个漫画
+            // _nextComic = bubbleData.nextId;
+            
+            //更改相机
+            CameraManager.Instance.ChangeCamera();
         }
-    
+
         private void OnBubbleRemove()
         {
         

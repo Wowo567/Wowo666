@@ -5,8 +5,9 @@ using Cinemachine;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
+using WowoFramework.Singleton;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : MonoBehaviourSingleton<CameraManager>
 {
     public GameObject piecesParent;
     private Transform[] _pieces;
@@ -19,12 +20,6 @@ public class CameraManager : MonoBehaviour
     private float _curHeight;
     private Vector2 _curCenter;
 
-    [Button("Init")]
-    private void Init()
-    {
-        Awake();
-    }
-
     private void Awake()
     {
         _virtualCameras = GameObject.Find("Virtual Camera").GetComponentsInChildren<CinemachineVirtualCamera>(true);
@@ -34,7 +29,7 @@ public class CameraManager : MonoBehaviour
     }
 
     [Button("ChangeCamera")]
-    private void ChangeCamera()
+    public void ChangeCamera()
     {
         GetSize();
         // 根据图形的高度调整摄像机的 OrthographicSize

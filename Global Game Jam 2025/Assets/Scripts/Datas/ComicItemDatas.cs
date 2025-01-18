@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Datas
 {
-    public class Bubble
+    public class BubbleData
     {
-        private int nextId;
-        private int faceId;
+        public int nextId;
+        public int faceId;
 
-        public Bubble(int nextId, int faceId)
+        public BubbleData(int nextId, int faceId)
         {
             this.nextId = nextId;
             this.faceId = faceId;
@@ -28,7 +28,7 @@ namespace Datas
         public string spriteName;
         public Sprite sprite;
         public Vector3 position;
-        public Dictionary<BubbleType, Bubble> nextComics;
+        public Dictionary<BubbleType, BubbleData> nextComics;
     }
 
     [ExcelAsset]
@@ -62,12 +62,12 @@ namespace Datas
                 item.position = GetPosition(item.positionStr);
 
                 // 创建 Bubble 对象
-                Bubble bubble1 = CreateBubble(item.bubble1);
-                Bubble bubble2 = CreateBubble(item.bubble2);
-                Bubble bubble3 = CreateBubble(item.bubble3);
+                BubbleData bubble1 = CreateBubble(item.bubble1);
+                BubbleData bubble2 = CreateBubble(item.bubble2);
+                BubbleData bubble3 = CreateBubble(item.bubble3);
 
                 // 初始化 nextComics 字典
-                item.nextComics = new Dictionary<BubbleType, Bubble>
+                item.nextComics = new Dictionary<BubbleType, BubbleData>
                 {
                     { (BubbleType)1, bubble1 },
                     { (BubbleType)2, bubble2 },
@@ -80,12 +80,12 @@ namespace Datas
         }
 
         // 辅助方法：从字符串创建 Bubble 对象
-        private Bubble CreateBubble(string bubbleStr)
+        private BubbleData CreateBubble(string bubbleStr)
         {
             string[] parts = bubbleStr.Split(';');
             int nextId = int.Parse(parts[0]);
             int faceId = int.Parse(parts[1]);
-            return new Bubble(nextId, faceId);
+            return new BubbleData(nextId, faceId);
         }
     }
 }
