@@ -13,9 +13,10 @@ namespace Datas
         public int bubble1;
         public int bubble2;
         public int bubble3;
+        public int bubble4;
         public string positionStr;
-        public string spriteName;
-        public Sprite sprite;
+        public string prefabName;
+        public GameObject prefab;
         public Vector3 position;
         public Dictionary<BubbleType, int> nextComics;
     }
@@ -23,7 +24,7 @@ namespace Datas
     [ExcelAsset]
     public class ComicItemDatas : ScriptableObject
     {
-        private const string imagePath = "Images/ComicItems/";
+        private const string prefabPath = "Prefabs/ComicItems/";
         public List<ComicData> datas;
 
         private Dictionary<int, ComicData> datasDic;
@@ -47,7 +48,7 @@ namespace Datas
 
             foreach (var item in datas)
             {
-                item.sprite = Resources.Load<Sprite>(imagePath + item.spriteName);
+                item.prefab = Resources.Load<GameObject>(prefabPath + item.prefabName);
                 item.position = GetPosition(item.positionStr);
                 
 
