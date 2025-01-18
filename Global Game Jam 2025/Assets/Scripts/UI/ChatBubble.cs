@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Comic;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -16,7 +18,10 @@ namespace UI
 
         private ChatBubbleButton _curChatBubbleButton = null;
         private ChatBubblePoint _curLockedPoint = null;
-
+        
+        private ChatBubblePoint _curHoveredPoint = null;
+        private List<ChatBubblePoint> _hoveredChatBubblePoints = new List<ChatBubblePoint>();
+        
         private void Awake()
         {
             _collider2D = GetComponent<Collider2D>();
@@ -28,8 +33,37 @@ namespace UI
             {
                 Vector3 mousePosition = Input.mousePosition;
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-                
                 transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
+                
+                _hoveredChatBubblePoints.Clear();
+                foreach (ChatBubblePoint chatBubblePoint in ChatBubblePointManager.Instance.points)
+                {
+                    if (chatBubblePoint.canAcceptedBubbleIDs.Contains(type) && _collider2D.OverlapPoint(chatBubblePoint.transform.position))
+                    {
+                        _hoveredChatBubblePoints.Add(chatBubblePoint);
+                    }
+                }
+                float minDis = float.MaxValue;
+                ChatBubblePoint _hoverPoint = null;
+                foreach (ChatBubblePoint chatBubblePoint in _hoveredChatBubblePoints)
+                {
+                    float dis = Vector3.Distance(chatBubblePoint.transform.position, transform.position);
+                    if (dis < minDis)
+                    {
+                        minDis = dis;
+                        _hoverPoint = chatBubblePoint;
+                    }
+                }
+
+                if (_curHoveredPoint != _hoverPoint)
+                {
+                    _curHoveredPoint.OnBubbleExit();
+                    _curHoveredPoint = _hoverPoint;
+                    if (_curHoveredPoint != null)
+                    {
+                        _curHoveredPoint.OnBubbleHover(type);
+                    }
+                }
 
                 if (Input.GetMouseButtonUp(0))
                 {
@@ -61,7 +95,7 @@ namespace UI
             transform.DOMove(chatBubblePoint.transform.position, 0.2f);
         }
 
-        public void GoHome()
+        private void GoHome()
         {
             state = ChatBubbleState.Free;
             if (_curChatBubbleButton != null)

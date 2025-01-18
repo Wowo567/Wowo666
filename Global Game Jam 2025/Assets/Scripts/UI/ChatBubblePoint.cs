@@ -16,7 +16,8 @@ namespace UI
 
         [NonSerialized] private ChatBubble _curChatBubble;
 
-        private List<BubbleType> canAcceptedBubbleIDs = new List<BubbleType>();
+        [NonSerialized]
+        public List<BubbleType> canAcceptedBubbleIDs = new List<BubbleType>();
         
         private void Awake()
         {
