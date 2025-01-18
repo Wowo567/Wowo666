@@ -33,7 +33,7 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = _comicData.position;
-            _face = transform.Find("Face").GetComponent<SpriteRenderer>();
+            //_face = transform.Find("Face").GetComponent<SpriteRenderer>();
         
             _point = GetComponentInChildren<ChatBubblePoint>();
             _point.Init(_comicData.nextComics.Keys.ToList());
@@ -46,8 +46,8 @@ namespace Comic
             BubbleData bubbleData = _comicData.nextComics[type];
             
             //更改表情
-            Sprite faceSprite = DatasManager.Instance.faceDatas.DatasDic[bubbleData.faceId].sprite;
-            _face.sprite = faceSprite;
+            //Sprite faceSprite = DatasManager.Instance.faceDatas.DatasDic[bubbleData.faceId].sprite;
+            // _face.sprite = faceSprite;
             //实例下一个漫画
             // _nextComic = bubbleData.nextId;
             

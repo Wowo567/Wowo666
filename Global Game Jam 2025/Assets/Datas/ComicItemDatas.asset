@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ComicItemDatas
   m_EditorClassIdentifier: 
   datas:
-  - id: 1
+  - id: 0
     bubble1: 1;1001
     bubble2: 1;1001
     bubble3: 1;1001

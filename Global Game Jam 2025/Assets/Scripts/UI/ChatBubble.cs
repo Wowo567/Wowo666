@@ -57,7 +57,10 @@ namespace UI
 
                 if (_curHoveredPoint != _hoverPoint)
                 {
-                    _curHoveredPoint.OnBubbleExit();
+                    if (_curHoveredPoint != null)
+                    {
+                        _curHoveredPoint.OnBubbleExit();   
+                    }
                     _curHoveredPoint = _hoverPoint;
                     if (_curHoveredPoint != null)
                     {
