@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Datas;
+using DG.Tweening;
 using UI;
 using UnityEngine;
 
@@ -11,21 +12,80 @@ namespace Comic
         Happy = 1,
         Angry = 2,
         Sad = 3,
+        Wait = 4,
     }
-    
+
+    public enum ComicType
+    {
+        Bubble = 1,
+        Transition = 2,
+        ClickTransition = 3
+    }
+
     public class ComicItem : MonoBehaviour
     {
         public int id;
+        public ComicType type;
         private ComicData _comicData;
         private ComicItem _nextComic;
         private Dictionary<BubbleType, ComicItem> _nextComicItems = new Dictionary<BubbleType, ComicItem>();
-
-        private SpriteRenderer _face;
+        
         private ChatBubblePoint _point;
+        private SpriteRenderer[] _grey, _color;
+        private float fadeTime = 0.3f;
         
         private void Start()
         {
             Init();
+        }
+
+        private void CheckType()
+        {
+            switch (type)
+            {
+                case ComicType.Transition:
+                    Transition();
+                    break;
+                case ComicType.ClickTransition:
+                    ClickTransition();
+                    break;
+                case ComicType.Bubble:
+                    Bubble();
+                    break;
+            }
+        }
+
+        private void Transition()
+        {
+            Sequence sequence = DOTween.Sequence();
+
+            // 显示线稿并等待完成
+            sequence.AppendCallback(() => GreyShow(true,fadeTime))
+                .AppendInterval(fadeTime);  // 确保 fadeTime 时间结束
+
+            // 然后显示彩色内容
+            sequence.AppendCallback(() => ColorShow(true,fadeTime))
+                .AppendInterval(fadeTime);
+            
+            //出现下一个漫画
+            sequence.AppendCallback(() => ShowNext(BubbleType.Happy));
+        }
+        
+        private void ClickTransition()
+        {
+            
+        }
+
+
+        private void Bubble()
+        {
+            //显示线稿
+            GreyShow(true,fadeTime);
+        
+            _point = GetComponentInChildren<ChatBubblePoint>();
+            _point.Init(_comicData.nextComics.Keys.ToList());
+            _point.OnBubble+= OnBubble;
+            _point.OnBubbleRemove+= OnBubbleRemove;
         }
 
         private void Init()
@@ -33,26 +93,46 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = _comicData.position;
-            _face = transform.Find("Face").GetComponent<SpriteRenderer>();
-        
-            _point = GetComponentInChildren<ChatBubblePoint>();
-            _point.Init(_comicData.nextComics.Keys.ToList());
-            _point.OnBubble+= OnBubble;
-            _point.OnBubbleRemove+= OnBubbleRemove;
+            _grey = transform.Find("Content/Grey").GetComponentsInChildren<SpriteRenderer>();
+            _color = transform.Find("Content/Color").GetComponentsInChildren<SpriteRenderer>();
+            //消失
+            GreyShow(false);
+            ColorShow(false);
+
+            CheckType();
         }
+
+        private void GreyShow(bool isShow,float fadeTime = 0)
+        {
+            foreach (var item in _grey)
+            {
+                item.DOFade(isShow ? 1 : 0, fadeTime);
+            }
+        }
+        
+        private void ColorShow(bool isShow,float fadeTime = 0)
+        {
+            foreach (var item in _color )
+            {
+                item.DOFade(isShow ? 1 : 0, fadeTime);
+            }
+        }
+
         
         private void OnBubble(BubbleType type)
         {
-            BubbleData bubbleData = _comicData.nextComics[type];
-            
-            //更改表情
-            Sprite faceSprite = DatasManager.Instance.faceDatas.DatasDic[bubbleData.faceId].sprite;
-            _face.sprite = faceSprite;
+            ColorShow(true,fadeTime);
+            ShowNext(type);
+
             //实例下一个漫画
             // _nextComic = bubbleData.nextId;
-            
-            //更改相机
-            CameraManager.Instance.ChangeCamera();
+
+        }
+
+        private void ShowNext(BubbleType type)
+        {
+            int next = _comicData.nextComics[type];
+            ComicManager.Instance.CreateComic(next);
         }
 
         private void OnBubbleRemove()

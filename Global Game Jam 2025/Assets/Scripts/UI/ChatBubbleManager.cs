@@ -21,6 +21,9 @@ namespace UI
             base.Awake();
             
             UnlockBubbleButton();
+            UnlockBubbleButton();
+            UnlockBubbleButton();
+            UnlockBubbleButton();
         }
 
         public void CreateChatBubble(ChatBubbleButton chatBubbleButton, GameObject chatBubblePrefab)
@@ -36,7 +39,7 @@ namespace UI
             _bubbles.Add(transform.GetChild(_bubbleIndex).GetComponent<RectTransform>());
             if (_bubbleIndex > 0)
             {
-                transform.GetChild(_bubbleIndex).GetComponent<ChatBubbleButton>().Bubble();
+                //transform.GetChild(_bubbleIndex).GetComponent<ChatBubbleButton>().Bubble();
             }
             RefreshLayout();
         }

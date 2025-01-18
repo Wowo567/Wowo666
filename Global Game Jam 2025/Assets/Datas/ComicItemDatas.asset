@@ -13,11 +13,39 @@ MonoBehaviour:
   m_Name: ComicItemDatas
   m_EditorClassIdentifier: 
   datas:
-  - id: 1
-    bubble1: 1;1001
-    bubble2: 1;1001
-    bubble3: 1;1001
-    positionStr: 0;0;0
-    spriteName: name
-    sprite: {fileID: 0}
+  - id: 11
+    bubble1: 12
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    positionStr: -0.22;5.74;0
+    prefabName: ComicItem_1-1
+    prefab: {fileID: 0}
+    position: {x: 0, y: 0, z: 0}
+  - id: 12
+    bubble1: 13
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    positionStr: -0.16;-0.41;0
+    prefabName: ComicItem_1-2
+    prefab: {fileID: 0}
+    position: {x: 0, y: 0, z: 0}
+  - id: 13
+    bubble1: 14
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    positionStr: -3.72;-4.93;0
+    prefabName: ComicItem_1-3
+    prefab: {fileID: 0}
+    position: {x: 0, y: 0, z: 0}
+  - id: 14
+    bubble1: 0
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    positionStr: 0;-6.97;0
+    prefabName: ComicItem_1-4
+    prefab: {fileID: 0}
     position: {x: 0, y: 0, z: 0}
