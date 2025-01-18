@@ -16,6 +16,7 @@ namespace UI
             if (transform.parent!=null && transform.parent.GetComponent<ChatBubblePoint>())
             {
                 ChatBubblePoint chatBubblePoint = transform.parent.GetComponent<ChatBubblePoint>();
+                _chatBubble.transform.SetParent(null);
                 _chatBubble.LockToPoint(chatBubblePoint);
             }
         }

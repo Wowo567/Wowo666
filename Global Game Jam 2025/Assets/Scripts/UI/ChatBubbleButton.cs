@@ -34,13 +34,13 @@ namespace UI
 
         public void Bubble()
         {
-            transform.GetComponent<Image>().color = Color.gray;
+            transform.GetComponent<Image>().color = UnityEngine.Color.gray;
             _isUsed = true;
         }
         
         public void Release()
         {
-            transform.GetComponent<Image>().color = Color.white;
+            transform.GetComponent<Image>().color = UnityEngine.Color.white;
             _isUsed = false;
         }
     }
