@@ -12,7 +12,7 @@ using WowoFramework.Singleton;
 public class CameraManager : MonoBehaviourSingleton<CameraManager>
 {
     private Camera _camera;
-    public float lookView;
+    private float lookView = 10;
     public float moveParameter = 0.3f;
     public float moveTime;
     [ReadOnly]
@@ -31,18 +31,21 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
     //[Button("ChangeCamera")]
     public void ChangeView()
     {
-        Debug.Log("ChangeView");
+        if(!enabled)return;
         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x, lookView, moveTime);
     }
 
     public void Recover()
     {
+        if(!enabled)return;
         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x, _initView, moveTime);
         transform.DOMove(new Vector3(0,0,-10), moveTime);
     }
     
     public void ChangeCamera()
     {
+      
+        if(!enabled)return;
         Vector3 offest;
         if (ComicManager.Instance.lastComic != null)
         {
@@ -52,7 +55,8 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
         {
              offest =  ComicManager.Instance.curComic.transform.position - Vector3.zero;
         }
-        
+        //Debug.Log("ChangeCamera lastComic"+ ComicManager.Instance.lastComic.transform.position);
+        //Debug.Log("ChangeCamera curComic"+ComicManager.Instance.curComic.transform.position);
         transform.DOMove(transform.position + offest * moveParameter, moveTime);
     }
 }

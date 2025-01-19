@@ -181,7 +181,7 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = recordedPosition;// _comicData.position;
-
+            CameraManager.Instance.ChangeCamera();
             CheckAnim();
             CheckType();
             CheckBubble();
@@ -261,7 +261,8 @@ namespace Comic
             AudioManager.Instance.PlaySoundEffect("Remove");
             int next = _comicData.nextComics[BubbleType.Happy];
             ComicManager.Instance.CreateComic(next);
-            
+            CameraManager.Instance.ChangeView();
+
         }
 
         private void OnBubbleRemove()

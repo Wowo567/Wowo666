@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6363636, y: 0.6363636, z: 0.6363636}
+  m_LocalScale: {x: 0.57851243, y: 0.57851243, z: 0.57851243}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6744353417181439101}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   type: 3
-  recordedPosition: {x: 0, y: 0, z: 0}
+  recordedPosition: {x: 0.561, y: 0.418, z: 0}
 --- !u!95 &1468499561243070705
 Animator:
   serializedVersion: 5

@@ -20,7 +20,6 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
             if (_curComic != value)
             {
                 _curComic = value;
-                CameraManager.Instance.ChangeCamera();
             }
         }
     }
@@ -56,7 +55,6 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         curComic = Instantiate(firstComic, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
         _comicItems[0] = curComic;
         _index += 1;
-        CameraManager.Instance.ChangeView();
     }
 
     public void CreateComic(int id)
