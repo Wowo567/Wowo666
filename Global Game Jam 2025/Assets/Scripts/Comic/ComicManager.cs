@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Comic;
 using Sirenix.OdinInspector;
 using UI;
+using UnityEditor;
 using UnityEngine;
 using WowoFramework.Singleton;
 
@@ -41,7 +42,8 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         foreach (var item in GetComponentsInChildren<ComicItem>())
         {
-            item.recordedPosition = item.transform.position;
+            item.SetPosition();
+            //item.recordedPosition = item.transform.position;
         }
         Debug.Log("Position recorded");
     }
