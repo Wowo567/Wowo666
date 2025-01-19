@@ -5,6 +5,7 @@ using Datas;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UI;
+using UnityEditor;
 using UnityEngine;
 
 namespace Comic
@@ -40,11 +41,23 @@ namespace Comic
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
         public Vector3 recordedPosition;
+        
+        //动画系统
+        private Animator _animator;
+        private float _animTime;
+
+        public void SetPosition()
+        {
+            recordedPosition = transform.position;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
+            PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
+        }
 
         private void Awake()
         {
             _grey = transform.GetComponentsInChildren<Grey>();
             _color = transform.GetComponentsInChildren<Color>();
+            _animator = GetComponent<Animator>();
             //消失
             GreyShow(false);
             ColorShow(false);
@@ -104,9 +117,31 @@ namespace Comic
             CameraManager.Instance.Recover();
         }
 
+        // 获取指定动画状态名的时长
+        public float GetAnimationDuration(string stateName)
+        {
+            // 获取 Animator 中的 Controller
+            RuntimeAnimatorController controller = _animator.runtimeAnimatorController;
+
+            // 获取所有的动画状态
+            foreach (var clip in controller.animationClips)
+            {
+                // 查找与传入的状态名称匹配的动画
+                if (clip.name == stateName)
+                {
+                    // 返回动画的时长
+                    return clip.length;
+                }
+            }
+
+            // 如果找不到对应的状态，返回 0 或适当的默认值
+            Debug.LogWarning("State with name " + stateName + " not found.");
+            return 0f;
+        }
         private void ShowContinue()
         {
-            GameManager.Instance.ShowContinue();
+            //GameManager.Instance.ShowContinue();
+            //_animTime = 
         }
 
         private void Bubble()
@@ -125,13 +160,12 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = recordedPosition;// _comicData.position;
-     
-           
+            
             CheckType();
             CheckBubble();
         }
 
-        private void GreyShow(bool isShow,float fadeTime = 0)
+        private void GreyShow(bool isShow,float fadeTime = 0) 
         {
             if (fadeTime == 0)
             {
