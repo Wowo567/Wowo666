@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 {
     public Action OnContinue;
 
+    public Action OnGameOver;
+
     [SerializeField] private Transform title;
 
     [SerializeField] private TextMesh textMesh;
@@ -64,5 +66,10 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         }
         PaperManager.Instance.ChangePaper();
         OnContinue?.Invoke();
+    }
+
+    public void GameOver()
+    {
+        OnGameOver?.Invoke();
     }
 }
