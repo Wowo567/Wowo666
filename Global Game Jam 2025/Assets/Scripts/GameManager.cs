@@ -9,8 +9,6 @@ using WowoFramework.Singleton;
 
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
-    public ContinueButton continueButton;
-
     public Action OnContinue;
 
     [Button]
