@@ -55,8 +55,8 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
         {
              offest =  ComicManager.Instance.curComic.transform.position - Vector3.zero;
         }
-        //Debug.Log("ChangeCamera lastComic"+ ComicManager.Instance.lastComic.transform.position);
-        //Debug.Log("ChangeCamera curComic"+ComicManager.Instance.curComic.transform.position);
+        Debug.Log("ChangeCamera lastComic"+ ComicManager.Instance.lastComic.transform.position);
+        Debug.Log("ChangeCamera curComic"+ComicManager.Instance.curComic.transform.position);
         transform.DOMove(transform.position + offest * moveParameter, moveTime);
     }
 }
