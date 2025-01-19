@@ -52,8 +52,8 @@ namespace Comic
         public void SetPosition()
         {
             recordedPosition = transform.position;
-            PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
-            PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
+            //PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
+            //PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
         }
 
         private void Awake()
