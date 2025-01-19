@@ -23,9 +23,15 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
         _initView = _camera.orthographicSize;
     }
 
+    private void Update()
+    {
+        Debug.Log("ChangeView"+_camera.orthographicSize);
+    }
+
     //[Button("ChangeCamera")]
     public void ChangeView()
     {
+        Debug.Log("ChangeView");
         DOTween.To(() => _camera.orthographicSize, x => _camera.orthographicSize = x, lookView, moveTime);
     }
 
