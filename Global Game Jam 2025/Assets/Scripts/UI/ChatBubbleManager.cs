@@ -19,8 +19,6 @@ namespace UI
         protected override void Awake()
         {
             base.Awake();
-            
-            UnlockBubbleButton();
         }
 
         public void CreateChatBubble(ChatBubbleButton chatBubbleButton, GameObject chatBubblePrefab)
