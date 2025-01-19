@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be5fd2de0bb34568bc644f369c6b77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 11
+  id: 23
   type: 2
   recordedPosition: {x: -0.50600004, y: 1.067, z: 0}
 --- !u!95 &4851834103928501205
