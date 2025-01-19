@@ -13,10 +13,18 @@ namespace UI
 
         public Transform curPaper;
 
+        public Transform comicsTrans;
+
         [Button]
         public void ChangePaper()
         {
             Transform abandonPaper = curPaper;
+            
+            curPaper = Instantiate(paperPrefab).transform;
+            comicsTrans = curPaper.Find("Comics");
+            curPaper.ResetAllLocal();
+            curPaper.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            
             ChatBubblePoint[] points = abandonPaper.GetComponentsInChildren<ChatBubblePoint>();
             foreach (ChatBubblePoint point in points)
             {
@@ -27,10 +35,6 @@ namespace UI
             {
                 Destroy(abandonPaper.gameObject);
             });
-            
-            curPaper = Instantiate(paperPrefab).transform;
-            curPaper.ResetAllLocal();
-            curPaper.localScale = new Vector3(1.1f, 1.1f, 1.1f);
         }
         
         [Button]
