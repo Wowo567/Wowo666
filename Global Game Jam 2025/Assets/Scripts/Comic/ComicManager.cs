@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Comic;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 using WowoFramework.Singleton;
@@ -29,6 +30,21 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     private Dictionary<int, Datas.ComicData> _datasDic;
     private ComicItem[] _comicItems;
     private int _index = 0;
+    
+    [Title("Position Recorder")]
+    [InfoBox("Click the button to record the object's position.")]
+
+
+    // 记录当前物体的位置
+    [Button("Record Position")]
+    private void RecordPosition()
+    {
+        foreach (var item in GetComponentsInChildren<ComicItem>())
+        {
+            item.recordedPosition = item.transform.position;
+        }
+        Debug.Log("Position recorded");
+    }
     
     // Start is called before the first frame update
     void Start()

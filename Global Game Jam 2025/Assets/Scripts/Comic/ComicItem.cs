@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Datas;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 
@@ -35,6 +36,10 @@ namespace Comic
         private Color[]  _color;
 
         private float fadeTime = 0.3f;
+
+        // 用来存储物体的 transform.position
+        [ShowInInspector]  // 让这个变量出现在Inspector中
+        public Vector3 recordedPosition;
 
         private void Awake()
         {
@@ -119,7 +124,7 @@ namespace Comic
         {
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
-            transform.position = _comicData.position;
+            transform.position = recordedPosition;// _comicData.position;
      
            
             CheckType();
@@ -128,17 +133,37 @@ namespace Comic
 
         private void GreyShow(bool isShow,float fadeTime = 0)
         {
-            foreach (var item in _grey)
+            if (fadeTime == 0)
             {
-                item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                foreach (var item in _grey)
+                {
+                    item.GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, isShow ? 1 : 0);
+                }
+            }
+            else
+            {
+                foreach (var item in _grey)
+                {
+                    item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                }   
             }
         }
         
         private void ColorShow(bool isShow,float fadeTime = 0)
         {
-            foreach (var item in _color )
+            if (fadeTime == 0)
             {
-                item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                foreach (var item in _color)
+                {
+                    item.GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, isShow ? 1 : 0);
+                }
+            }
+            else
+            {
+                foreach (var item in _color )
+                {
+                    item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
+                }
             }
         }
         
