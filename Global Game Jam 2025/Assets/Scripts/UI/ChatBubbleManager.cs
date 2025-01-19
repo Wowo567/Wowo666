@@ -27,9 +27,19 @@ namespace UI
         }
 
         [Button]
-        public ChatBubbleButton UnlockBubbleButton()
+        public ChatBubbleButton UnlockBubbleButton(int index = -1)
         {
-            _bubbleIndex++;
+            if (index == -1)
+            {
+                _bubbleIndex++;
+            }
+            else
+            {
+                if (_bubbleIndex + 1 != index)
+                {
+                    return null;
+                }
+            }
             transform.GetChild(_bubbleIndex).gameObject.SetActive(true);
             _bubbles.Add(transform.GetChild(_bubbleIndex).GetComponent<RectTransform>());
             if (_bubbleIndex > 0)
