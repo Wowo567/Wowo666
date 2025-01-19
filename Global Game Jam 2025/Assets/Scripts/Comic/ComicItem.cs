@@ -22,7 +22,8 @@ namespace Comic
     {
         Bubble = 1,
         Transition = 2,
-        ClickTransition = 3
+        ClickTransition = 3,
+        ClickTransitionBubble = 4
     }
 
     public class ComicItem : MonoBehaviour
@@ -51,8 +52,8 @@ namespace Comic
         public void SetPosition()
         {
             recordedPosition = transform.position;
-            PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
-            PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
+            //PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
+            //PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
         }
 
         private void Awake()
@@ -83,6 +84,9 @@ namespace Comic
                     break;
                 case ComicType.Bubble:
                     Bubble();
+                    break;
+                case ComicType.ClickTransitionBubble:
+                    ClickTransitionBubble();
                     break;
             }
         }
@@ -170,9 +174,38 @@ namespace Comic
             _point.OnBubble+= OnBubble;
             _point.OnBubbleRemove+= OnBubbleRemove;
         }
+        
+        private void ClickTransitionBubble()
+        {
+            GameManager.Instance.OnContinue += OnContinue;
+            Sequence sequence = DOTween.Sequence();
+            // 显示线稿并等待完成
+            sequence.AppendCallback(() => GreyShow(true,fadeTime))
+                .AppendInterval(fadeTime);  // 确保 fadeTime 时间结束
+
+            // 然后显示彩色内容
+            sequence.AppendCallback(() => ColorShow(true,fadeTime))
+                .AppendInterval(fadeTime);
+            
+            //出现Continue
+            sequence.AppendCallback(() => ShowContinue());
+
+            CameraManager.Instance.Recover();
+        
+            _point = GetComponentInChildren<ChatBubblePoint>();
+            _point.Init(_comicData.nextComics.Keys.ToList());
+            _point.OnBubble+= OnBubble;
+            _point.OnBubbleRemove+= OnBubbleRemove;
+        }
 
         private void CheckAnim()
         {
+            if (_animator == null)
+            {
+                _animTime = 0;
+                return;
+            }
+
             _animTime = GetAnimationDuration("Type" + (int)type);
         }
 
