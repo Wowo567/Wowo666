@@ -15,10 +15,12 @@ namespace UI
             {
                 int index = (int)transform.GetComponent<ChatBubble>().type - 1;
                 Debug.Log($"待解锁 {index}");
+                Debug.Log($"待解锁 {index}");
                 _chatBubble.SetChatBubbleButton(
                     ChatBubbleManager.Instance.UnlockBubbleButton(index));
                 ChatBubblePoint chatBubblePoint = transform.parent.GetComponent<ChatBubblePoint>();
                 _chatBubble.transform.SetParent(null);
+                Debug.Log("?????????????");
                 _chatBubble.LockToPoint(chatBubblePoint);
             }
             

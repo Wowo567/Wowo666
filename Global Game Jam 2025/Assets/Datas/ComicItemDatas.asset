@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   datas:
   - id: 11
-    bubble1: 3
+    bubble1: 12
     bubble2: 22
     bubble3: 32
     bubble4: 0

@@ -117,6 +117,10 @@ namespace UI
                     });
                 }
             }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void SetHome(ChatBubbleButton chatBubbleButton)
