@@ -49,6 +49,7 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
         }
         else
         {
+            Debug.Log("PlaySoundEffect");
             sfxAudioSource.PlayOneShot(clip);
         }
     }

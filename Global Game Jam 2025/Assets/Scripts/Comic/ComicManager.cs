@@ -59,6 +59,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
 
     public void CreateComic(int id)
     {
+        Debug.Log("CreateComic"+id);
         GameObject nextPrefab = _datasDic[id].prefab;
         lastComic = curComic;
         curComic = Instantiate(nextPrefab, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
@@ -92,5 +93,13 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
             }
         }
     }
-    
+
+    public void NextPage()
+    {
+        _index = 0;
+        for (int i = 0; i < _comicItems.Length; i++)
+        {
+            _comicItems[i] = null;
+        }
+    }
 }

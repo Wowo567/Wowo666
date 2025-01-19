@@ -69,7 +69,6 @@ namespace Comic
         private void Start()
         {
             Init();
-            GameManager.Instance.OnContinue += OnContinue;
         }
 
         private void CheckType()
@@ -110,6 +109,7 @@ namespace Comic
         
         private void ClickTransition()
         {
+            GameManager.Instance.OnContinue += OnContinue;
             Sequence sequence = DOTween.Sequence();
             // 显示线稿并等待完成
             sequence.AppendCallback(() => GreyShow(true,fadeTime))
@@ -265,9 +265,9 @@ namespace Comic
         {
             AudioManager.Instance.PlaySoundEffect("Remove");
             int next = _comicData.nextComics[BubbleType.Happy];
+            ComicManager.Instance.NextPage();
             ComicManager.Instance.CreateComic(next);
             CameraManager.Instance.ChangeView();
-
         }
 
         private void OnBubbleRemove()
@@ -295,6 +295,21 @@ namespace Comic
         private void CheckBubble()
         {
             //GetComponent(bubble)
+        }
+
+        private void OnDestroy()
+        {
+            RemoveAction();
+        }
+
+        private void RemoveAction()
+        {
+            GameManager.Instance.OnContinue -= OnContinue;
+            if (type == ComicType.Bubble)
+            {
+                _point.OnBubble-= OnBubble;
+                _point.OnBubbleRemove-= OnBubbleRemove;
+            }
         }
     }
 }

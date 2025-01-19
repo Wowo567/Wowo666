@@ -25,7 +25,7 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
 
     private void Update()
     {
-        Debug.Log("ChangeView"+_camera.orthographicSize);
+        //Debug.Log("ChangeView"+_camera.orthographicSize);
     }
 
     //[Button("ChangeCamera")]
