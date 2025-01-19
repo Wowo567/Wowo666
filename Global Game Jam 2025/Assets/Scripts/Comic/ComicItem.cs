@@ -200,6 +200,12 @@ namespace Comic
 
         private void CheckAnim()
         {
+            if (_animator == null)
+            {
+                _animTime = 0;
+                return;
+            }
+
             _animTime = GetAnimationDuration("Type" + (int)type);
         }
 
