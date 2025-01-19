@@ -36,7 +36,7 @@ namespace Comic
         private Grey[]  _grey;
         private Color[]  _color;
 
-        private float fadeTime = 0.5f;
+        private float fadeTime = 0.3f;
 
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
@@ -46,8 +46,6 @@ namespace Comic
         private Animator _animator;
         private float _animTime;
 
-
-        private BubbleType _bubbleType = BubbleType.Happy;
         public void SetPosition()
         {
             recordedPosition = transform.position;
@@ -63,13 +61,11 @@ namespace Comic
             //消失
             GreyShow(false);
             ColorShow(false);
-            
         }
 
         private void Start()
         {
             Init();
-            GameManager.Instance.OnContinue += OnContinue;
         }
 
         private void CheckType()
@@ -100,10 +96,6 @@ namespace Comic
             sequence.AppendCallback(() => ColorShow(true,fadeTime))
                 .AppendInterval(fadeTime);
             
-            // 显示动画
-            sequence.AppendCallback(ShowAnim)
-                .AppendInterval(_animTime);
-            
             //出现下一个漫画
             sequence.AppendCallback(() => ShowNext(BubbleType.Happy));
         }
@@ -118,10 +110,6 @@ namespace Comic
             // 然后显示彩色内容
             sequence.AppendCallback(() => ColorShow(true,fadeTime))
                 .AppendInterval(fadeTime);
-            
-            // 显示动画
-            sequence.AppendCallback(ShowAnim)
-                .AppendInterval(_animTime);
             
             //出现Continue
             sequence.AppendCallback(() => ShowContinue());
@@ -152,12 +140,8 @@ namespace Comic
         }
         private void ShowContinue()
         {
-            PaperManager.Instance.ShowContinue();
-        }
-
-        private void ShowAnim()
-        {
-           _animator.SetInteger("Type", (int)_bubbleType);
+            //GameManager.Instance.ShowContinue();
+            //_animTime = 
         }
 
         private void Bubble()
@@ -171,18 +155,12 @@ namespace Comic
             _point.OnBubbleRemove+= OnBubbleRemove;
         }
 
-        private void CheckAnim()
-        {
-            _animTime = GetAnimationDuration("Type" + (int)type);
-        }
-
         private void Init()
         {
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = recordedPosition;// _comicData.position;
-
-            CheckAnim();
+            
             CheckType();
             CheckBubble();
         }
@@ -225,18 +203,8 @@ namespace Comic
         
         private void OnBubble(BubbleType type)
         {
-            _bubbleType = type;
-            
-            Sequence sequence = DOTween.Sequence();
-            // 然后显示彩色内容
-            sequence.AppendCallback(() => ColorShow(true,fadeTime))
-                .AppendInterval(fadeTime);
-            
-            // 显示动画
-            sequence.AppendCallback(ShowAnim)
-                .AppendInterval(_animTime);
-     
-            sequence.AppendCallback(() =>  ShowNext(type));
+            ColorShow(true,fadeTime);
+            ShowNext(type);
         }
 
         private void ShowNext(BubbleType type)
@@ -250,14 +218,6 @@ namespace Comic
             {
                 ComicManager.Instance.CreateComic(next);
             }
-        }
-        
-        
-        private void OnContinue()
-        {
-            int next = _comicData.nextComics[BubbleType.Happy];
-            ComicManager.Instance.CreateComic(next);
-            
         }
 
         private void OnBubbleRemove()

@@ -40,7 +40,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     [Button("Record Position")]
     private void RecordPosition()
     {
-        foreach (var item in PaperManager.Instance.comicsTrans.GetComponentsInChildren<ComicItem>(true))
+        foreach (var item in GetComponentsInChildren<ComicItem>())
         {
             item.SetPosition();
             //item.recordedPosition = item.transform.position;
@@ -53,7 +53,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
         _comicItems = new ComicItem[5];
-        curComic = Instantiate(firstComic, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
+        curComic = Instantiate(firstComic, PaperManager.Instance.curPaper).GetComponent<ComicItem>();
         _comicItems[0] = curComic;
         _index += 1;
         CameraManager.Instance.ChangeView();
@@ -63,7 +63,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         GameObject nextPrefab = _datasDic[id].prefab;
         lastComic = curComic;
-        curComic = Instantiate(nextPrefab, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
+        curComic = Instantiate(nextPrefab, PaperManager.Instance.curPaper).GetComponent<ComicItem>();
         _comicItems[_index] = curComic;
         _index += 1;
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3147437167014687232}
   - component: {fileID: 6475454502299692545}
   - component: {fileID: 8945352744209264347}
-  - component: {fileID: 5241663328250258947}
+  - component: {fileID: 7389591803999894168}
   m_Layer: 0
   m_Name: ChatBubble_0
   m_TagString: Untagged
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   state: 0
---- !u!61 &5241663328250258947
+--- !u!61 &7389591803999894168
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,5 +143,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3, y: 2.29}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
