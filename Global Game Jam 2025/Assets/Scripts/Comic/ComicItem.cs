@@ -216,11 +216,16 @@ namespace Comic
             }
             else
             {
-                if(isShow) AudioManager.Instance.PlaySoundEffect("ShowColor");
                 foreach (var item in _color )
                 {
                     item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
                 }
+            }
+            
+            if (isShow)
+            {
+                AudioManager.Instance.PlaySoundEffect("ShowColor");
+                GreyShow(false, fadeTime);
             }
         }
         
