@@ -14,5 +14,6 @@ public class EndTag : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         CameraManager.Instance.EndAnim();
+        AudioManager.Instance.PlayMusic(MusicType.Weird);
     }
 }
