@@ -99,7 +99,11 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
+<<<<<<<< Updated upstream:Global Game Jam 2025/Assets/Anim/ComicItem1-3/ComicItem.controller
   m_Motion: {fileID: 7400000, guid: c20140106eb8445968a6b6a55f9e0559, type: 2}
+========
+  m_Motion: {fileID: 7400000, guid: 059fcda1235da45308d928c5f79a3d45, type: 2}
+>>>>>>>> Stashed changes:Global Game Jam 2025/Assets/Anim/ComicItem0-1/ComicItem_0-1.controller
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

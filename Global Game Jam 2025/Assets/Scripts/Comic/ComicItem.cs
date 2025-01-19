@@ -36,7 +36,7 @@ namespace Comic
         private Grey[]  _grey;
         private Color[]  _color;
 
-        private float fadeTime = 0.5f;
+        private float fadeTime = 1f;
 
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
@@ -216,6 +216,7 @@ namespace Comic
             }
             else
             {
+                if(isShow) AudioManager.Instance.PlaySoundEffect("ShowColor");
                 foreach (var item in _color )
                 {
                     item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
@@ -225,6 +226,8 @@ namespace Comic
         
         private void OnBubble(BubbleType type)
         {
+            AudioManager.Instance.PlaySoundEffect("OnBubble");
+            
             _bubbleType = type;
             
             Sequence sequence = DOTween.Sequence();
@@ -255,6 +258,7 @@ namespace Comic
         
         private void OnContinue()
         {
+            AudioManager.Instance.PlaySoundEffect("Remove");
             int next = _comicData.nextComics[BubbleType.Happy];
             ComicManager.Instance.CreateComic(next);
             
@@ -262,6 +266,7 @@ namespace Comic
 
         private void OnBubbleRemove()
         {
+            AudioManager.Instance.PlaySoundEffect("Remove");
             Sequence sequence = DOTween.Sequence();
             // 消失
             sequence.AppendCallback(() => ColorShow(false,fadeTime))
