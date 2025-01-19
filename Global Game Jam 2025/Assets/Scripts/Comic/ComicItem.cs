@@ -161,7 +161,7 @@ namespace Comic
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = recordedPosition;// _comicData.position;
 
-            //CheckAnim();
+
             CheckType();
             CheckBubble();
         }
