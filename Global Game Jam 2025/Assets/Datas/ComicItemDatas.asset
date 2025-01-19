@@ -38,7 +38,7 @@ MonoBehaviour:
     bubble1: 1
     bubble2: 0
     bubble3: 0
-    bubble4: 0
+    bubble4: 44
     prefabName: ComicItem_1-4
     prefab: {fileID: 0}
   - id: 1
@@ -47,6 +47,20 @@ MonoBehaviour:
     bubble3: 0
     bubble4: 0
     prefabName: ComicItem_0-1
+    prefab: {fileID: 0}
+  - id: 2
+    bubble1: 11
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    prefabName: ComicItem_0-2
+    prefab: {fileID: 0}
+  - id: 3
+    bubble1: 0
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    prefabName: ComicItem_0-3
     prefab: {fileID: 0}
   - id: 22
     bubble1: 23
@@ -70,7 +84,7 @@ MonoBehaviour:
     prefabName: ComicItem_2-4
     prefab: {fileID: 0}
   - id: 25
-    bubble1: 1
+    bubble1: 2
     bubble2: 0
     bubble3: 0
     bubble4: 0
@@ -91,15 +105,15 @@ MonoBehaviour:
     prefabName: ComicItem_3-3
     prefab: {fileID: 0}
   - id: 34
-    bubble1: 35
+    bubble1: 0
     bubble2: 0
     bubble3: 0
-    bubble4: 0
+    bubble4: 35
     prefabName: ComicItem_3-4
     prefab: {fileID: 0}
   - id: 35
-    bubble1: 0
-    bubble2: 36
+    bubble1: 36
+    bubble2: 0
     bubble3: 0
     bubble4: 0
     prefabName: ComicItem_3-5
@@ -117,4 +131,18 @@ MonoBehaviour:
     bubble3: 0
     bubble4: 0
     prefabName: ComicItem_3-7
+    prefab: {fileID: 0}
+  - id: 43
+    bubble1: 0
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    prefabName: ComicItem_4-3
+    prefab: {fileID: 0}
+  - id: 44
+    bubble1: 3
+    bubble2: 0
+    bubble3: 0
+    bubble4: 0
+    prefabName: ComicItem_4-4
     prefab: {fileID: 0}

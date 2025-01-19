@@ -53,7 +53,8 @@ namespace Datas
                 {
                     { (BubbleType)1, item.bubble1 },
                     { (BubbleType)2, item.bubble2 },
-                    { (BubbleType)3, item.bubble3 }
+                    { (BubbleType)3, item.bubble3 },
+                    { (BubbleType)4, item.bubble4 }
                 };
 
                 // 将 item 添加到 datasDic 中

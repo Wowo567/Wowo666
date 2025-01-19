@@ -146,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 25
   type: 4
-  recordedPosition: {x: 5.478, y: -6.5889997, z: 0}
+  recordedPosition: {x: 5.478, y: -6.5889997, z: -0.1}
 --- !u!95 &4851834103928501205
 Animator:
   serializedVersion: 5

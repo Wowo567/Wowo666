@@ -5,8 +5,10 @@ using Datas;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UI;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using Sequence = DG.Tweening.Sequence;
 
 namespace Comic
 {
@@ -64,7 +66,6 @@ namespace Comic
             //消失
             GreyShow(false);
             ColorShow(false);
-            
         }
 
         private void Start()
@@ -166,6 +167,7 @@ namespace Comic
 
         private void Bubble()
         {
+            Debug.Log("Bubble-------"+gameObject.name);
             //显示线稿
             GreyShow(true,fadeTime);
         
@@ -263,7 +265,8 @@ namespace Comic
         }
         
         private void OnBubble(BubbleType type)
-        {
+        { 
+            Debug.Log("ShowNext------");
             AudioManager.Instance.PlaySoundEffect("OnBubble");
             
             _bubbleType = type;
@@ -272,16 +275,23 @@ namespace Comic
             // 然后显示彩色内容
             sequence.AppendCallback(() => ColorShow(true,fadeTime))
                 .AppendInterval(fadeTime);
-            
             // 显示动画
             sequence.AppendCallback(ShowAnim)
                 .AppendInterval(_animTime);
-            
-            sequence.AppendCallback(() =>  ShowNext(type));
+           
+           // if (gameObject.name.Contains("ComicItem_3-4"))
+            {
+           //     ShowNext(type);
+            }
+           // else
+            {
+                sequence.AppendCallback(() =>  ShowNext(type));
+            }
         }
 
         private void ShowNext(BubbleType type)
         {
+            Debug.Log("ShowNext------");
             int next = _comicData.nextComics[type];
             if (next == 0)
             {

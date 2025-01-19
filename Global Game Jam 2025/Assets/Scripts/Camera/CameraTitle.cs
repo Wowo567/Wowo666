@@ -17,7 +17,7 @@ public class TitleCamera : MonoBehaviourSingleton<TitleCamera>
       sequence.AppendInterval(2);
       
       sequence.AppendCallback(() => FirstChange())
-         .AppendInterval(1);
+         .AppendInterval(0.5f);
       
       sequence.AppendInterval(_moveTime);
       sequence.AppendCallback(() => SecondChange())

@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 24
   type: 2
-  recordedPosition: {x: -4.488, y: -6.5889997, z: 0}
+  recordedPosition: {x: -3, y: -6.5889997, z: 0}
 --- !u!1 &599066108835395858
 GameObject:
   m_ObjectHideFlags: 0

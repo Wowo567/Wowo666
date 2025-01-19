@@ -51,7 +51,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     void Start()
     {
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
-        _comicItems = new ComicItem[5];
+        _comicItems = new ComicItem[10];
         curComic = Instantiate(firstComic, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
         _comicItems[0] = curComic;
         _index += 1;
