@@ -14,10 +14,8 @@ namespace Datas
         public int bubble2;
         public int bubble3;
         public int bubble4;
-        public string positionStr;
         public string prefabName;
         public GameObject prefab;
-        public Vector3 position;
         public Dictionary<BubbleType, int> nextComics;
     }
 
@@ -49,8 +47,6 @@ namespace Datas
             foreach (var item in datas)
             {
                 item.prefab = Resources.Load<GameObject>(prefabPath + item.prefabName);
-                item.position = GetPosition(item.positionStr);
-                
 
                 // 初始化 nextComics 字典
                 item.nextComics = new Dictionary<BubbleType, int>
