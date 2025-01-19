@@ -36,11 +36,13 @@ namespace UI
                 Destroy(abandonPaper.gameObject);
             });
         }
-        
+
         [Button]
         public void ShowContinue()
         {
             curPaper.Find("continue").gameObject.SetActive(true);
+            curPaper.Find("continue").GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, 0);
+            curPaper.Find("continue").GetComponent<SpriteRenderer>().DOFade(1, 0.5f);
         }
     }
 }

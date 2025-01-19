@@ -18,7 +18,9 @@ public enum MusicType
 
 public class AudioManager : MonoBehaviourSingleton<AudioManager>
 {
-    private static string SoundEffectPath = "Audio/SFX/SFX_";
+
+    private static string SoundEffectPath = "Audio/SFX/";
+
    public AudioSource musicAudioSource, sfxAudioSource;
     public AudioClip normal, weird;
 
