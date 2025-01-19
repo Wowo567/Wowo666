@@ -63,11 +63,13 @@ namespace Comic
             //消失
             GreyShow(false);
             ColorShow(false);
+            
         }
 
         private void Start()
         {
             Init();
+            GameManager.Instance.OnContinue += OnContinue;
         }
 
         private void CheckType()
@@ -248,6 +250,14 @@ namespace Comic
             {
                 ComicManager.Instance.CreateComic(next);
             }
+        }
+        
+        
+        private void OnContinue()
+        {
+            int next = _comicData.nextComics[BubbleType.Happy];
+            ComicManager.Instance.CreateComic(next);
+            
         }
 
         private void OnBubbleRemove()

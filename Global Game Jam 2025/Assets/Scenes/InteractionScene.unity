@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb639e28e71ad7c49a61413d9e08d2b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstComic: {fileID: 347568433515153535, guid: 6f30e6ba26b0f244f84141ae91b2e568, type: 3}
+  firstComic: {fileID: 347568433515153535, guid: 540ac533410b44b45a93c18b1ddf0d5a, type: 3}
 --- !u!114 &789285110
 MonoBehaviour:
   m_ObjectHideFlags: 0
