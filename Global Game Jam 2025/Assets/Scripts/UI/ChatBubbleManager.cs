@@ -37,7 +37,12 @@ namespace UI
             {
                 if (_bubbleIndex + 1 != index)
                 {
+                    Debug.Log($"{_bubbleIndex} xxxxx {index}");
                     return null;
+                }
+                else
+                {
+                    _bubbleIndex++;
                 }
             }
             transform.GetChild(_bubbleIndex).gameObject.SetActive(true);

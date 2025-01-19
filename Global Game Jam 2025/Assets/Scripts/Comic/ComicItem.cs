@@ -276,7 +276,7 @@ namespace Comic
             // 显示动画
             sequence.AppendCallback(ShowAnim)
                 .AppendInterval(_animTime);
-     
+            
             sequence.AppendCallback(() =>  ShowNext(type));
         }
 

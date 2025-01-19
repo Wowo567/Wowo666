@@ -13,8 +13,10 @@ namespace UI
             
             if (transform.parent!=null && transform.parent.GetComponent<ChatBubblePoint>())
             {
+                int index = (int)transform.GetComponent<ChatBubble>().type - 1;
+                Debug.Log($"待解锁 {index}");
                 _chatBubble.SetChatBubbleButton(
-                    ChatBubbleManager.Instance.UnlockBubbleButton((int)transform.GetComponent<ChatBubble>().type - 1));
+                    ChatBubbleManager.Instance.UnlockBubbleButton(index));
                 ChatBubblePoint chatBubblePoint = transform.parent.GetComponent<ChatBubblePoint>();
                 _chatBubble.transform.SetParent(null);
                 _chatBubble.LockToPoint(chatBubblePoint);
