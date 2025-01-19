@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   datas:
   - id: 11
-    bubble1: 12
+    bubble1: 3
     bubble2: 22
     bubble3: 32
     bubble4: 0
@@ -126,7 +126,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-6
     prefab: {fileID: 0}
   - id: 37
-    bubble1: 0
+    bubble1: 2
     bubble2: 0
     bubble3: 0
     bubble4: 0
