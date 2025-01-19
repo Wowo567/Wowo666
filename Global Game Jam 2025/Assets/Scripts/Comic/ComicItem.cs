@@ -36,7 +36,7 @@ namespace Comic
         private Grey[]  _grey;
         private Color[]  _color;
 
-        private float fadeTime = 0.3f;
+        private float fadeTime = 1f;
 
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
@@ -46,6 +46,8 @@ namespace Comic
         private Animator _animator;
         private float _animTime;
 
+
+        private BubbleType _bubbleType = BubbleType.Happy;
         public void SetPosition()
         {
             recordedPosition = transform.position;
@@ -61,11 +63,13 @@ namespace Comic
             //消失
             GreyShow(false);
             ColorShow(false);
+            
         }
 
         private void Start()
         {
             Init();
+            GameManager.Instance.OnContinue += OnContinue;
         }
 
         private void CheckType()
@@ -96,6 +100,10 @@ namespace Comic
             sequence.AppendCallback(() => ColorShow(true,fadeTime))
                 .AppendInterval(fadeTime);
             
+            // 显示动画
+            sequence.AppendCallback(ShowAnim)
+                .AppendInterval(_animTime);
+            
             //出现下一个漫画
             sequence.AppendCallback(() => ShowNext(BubbleType.Happy));
         }
@@ -110,6 +118,10 @@ namespace Comic
             // 然后显示彩色内容
             sequence.AppendCallback(() => ColorShow(true,fadeTime))
                 .AppendInterval(fadeTime);
+            
+            // 显示动画
+            sequence.AppendCallback(ShowAnim)
+                .AppendInterval(_animTime);
             
             //出现Continue
             sequence.AppendCallback(() => ShowContinue());
@@ -140,8 +152,12 @@ namespace Comic
         }
         private void ShowContinue()
         {
-            //GameManager.Instance.ShowContinue();
-            //_animTime = 
+            PaperManager.Instance.ShowContinue();
+        }
+
+        private void ShowAnim()
+        {
+           _animator.SetInteger("Type", (int)_bubbleType);
         }
 
         private void Bubble()
@@ -155,12 +171,18 @@ namespace Comic
             _point.OnBubbleRemove+= OnBubbleRemove;
         }
 
+        private void CheckAnim()
+        {
+            _animTime = GetAnimationDuration("Type" + (int)type);
+        }
+
         private void Init()
         {
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = recordedPosition;// _comicData.position;
-            
+
+            CheckAnim();
             CheckType();
             CheckBubble();
         }
@@ -194,6 +216,7 @@ namespace Comic
             }
             else
             {
+                if(isShow) AudioManager.Instance.PlaySoundEffect("ShowColor");
                 foreach (var item in _color )
                 {
                     item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
@@ -203,8 +226,20 @@ namespace Comic
         
         private void OnBubble(BubbleType type)
         {
-            ColorShow(true,fadeTime);
-            ShowNext(type);
+            AudioManager.Instance.PlaySoundEffect("OnBubble");
+            
+            _bubbleType = type;
+            
+            Sequence sequence = DOTween.Sequence();
+            // 然后显示彩色内容
+            sequence.AppendCallback(() => ColorShow(true,fadeTime))
+                .AppendInterval(fadeTime);
+            
+            // 显示动画
+            sequence.AppendCallback(ShowAnim)
+                .AppendInterval(_animTime);
+     
+            sequence.AppendCallback(() =>  ShowNext(type));
         }
 
         private void ShowNext(BubbleType type)
@@ -219,9 +254,19 @@ namespace Comic
                 ComicManager.Instance.CreateComic(next);
             }
         }
+        
+        
+        private void OnContinue()
+        {
+            AudioManager.Instance.PlaySoundEffect("Remove");
+            int next = _comicData.nextComics[BubbleType.Happy];
+            ComicManager.Instance.CreateComic(next);
+            
+        }
 
         private void OnBubbleRemove()
         {
+            AudioManager.Instance.PlaySoundEffect("Remove");
             Sequence sequence = DOTween.Sequence();
             // 消失
             sequence.AppendCallback(() => ColorShow(false,fadeTime))
