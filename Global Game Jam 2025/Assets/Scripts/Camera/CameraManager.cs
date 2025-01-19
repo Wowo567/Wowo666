@@ -59,4 +59,15 @@ public class CameraManager : MonoBehaviourSingleton<CameraManager>
         Debug.Log("ChangeCamera curComic"+ComicManager.Instance.curComic.transform.position);
         transform.DOMove(transform.position + offest * moveParameter, moveTime);
     }
+
+    [Button]
+    public void EndAnim()
+    {
+        SpriteRenderer spriteRenderer = transform.Find("Fade").GetComponent<SpriteRenderer>();
+        spriteRenderer.DOFade(1, 2f).OnComplete(() =>
+        {
+            transform.position = new Vector3(0, 40, -10);
+            spriteRenderer.DOFade(0, 2);
+        });
+    }
 }
