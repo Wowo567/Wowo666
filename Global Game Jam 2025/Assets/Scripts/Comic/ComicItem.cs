@@ -36,7 +36,11 @@ namespace Comic
         private Grey[]  _grey;
         private Color[]  _color;
 
+<<<<<<< Updated upstream
         private float fadeTime = 0.3f;
+=======
+        private float fadeTime = 1f;
+>>>>>>> Stashed changes
 
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
@@ -194,6 +198,7 @@ namespace Comic
             }
             else
             {
+                if(isShow) AudioManager.Instance.PlaySoundEffect("ShowColor");
                 foreach (var item in _color )
                 {
                     item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
@@ -203,8 +208,25 @@ namespace Comic
         
         private void OnBubble(BubbleType type)
         {
+<<<<<<< Updated upstream
             ColorShow(true,fadeTime);
             ShowNext(type);
+=======
+            AudioManager.Instance.PlaySoundEffect("OnBubble");
+            
+            _bubbleType = type;
+            
+            Sequence sequence = DOTween.Sequence();
+            // 然后显示彩色内容
+            sequence.AppendCallback(() => ColorShow(true,fadeTime))
+                .AppendInterval(fadeTime);
+            
+            // 显示动画
+            sequence.AppendCallback(ShowAnim)
+                .AppendInterval(_animTime);
+     
+            sequence.AppendCallback(() =>  ShowNext(type));
+>>>>>>> Stashed changes
         }
 
         private void ShowNext(BubbleType type)
@@ -219,9 +241,22 @@ namespace Comic
                 ComicManager.Instance.CreateComic(next);
             }
         }
+<<<<<<< Updated upstream
+=======
+        
+        
+        private void OnContinue()
+        {
+            AudioManager.Instance.PlaySoundEffect("Remove");
+            int next = _comicData.nextComics[BubbleType.Happy];
+            ComicManager.Instance.CreateComic(next);
+            
+        }
+>>>>>>> Stashed changes
 
         private void OnBubbleRemove()
         {
+            AudioManager.Instance.PlaySoundEffect("Remove");
             Sequence sequence = DOTween.Sequence();
             // 消失
             sequence.AppendCallback(() => ColorShow(false,fadeTime))
