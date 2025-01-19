@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     [SerializeField] private Image bubbleBar;
 
-    private bool _isFirstContinue = false;
+    private bool _isFirstContinue = true;
 
     protected override void Awake()
     {
