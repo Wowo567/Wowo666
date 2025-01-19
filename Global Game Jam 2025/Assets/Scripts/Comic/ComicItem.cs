@@ -160,8 +160,7 @@ namespace Comic
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             transform.position = recordedPosition;// _comicData.position;
-
-            //CheckAnim();
+            
             CheckType();
             CheckBubble();
         }
