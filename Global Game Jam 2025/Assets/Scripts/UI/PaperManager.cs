@@ -12,13 +12,6 @@ namespace UI
         public GameObject paperPrefab;
 
         public Transform curPaper;
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            
-        }
 
         [Button]
         public void ChangePaper()
@@ -38,6 +31,12 @@ namespace UI
             curPaper = Instantiate(paperPrefab).transform;
             curPaper.ResetAllLocal();
             curPaper.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+        }
+        
+        [Button]
+        public void ShowContinue()
+        {
+            curPaper.Find("continue").gameObject.SetActive(true);
         }
     }
 }

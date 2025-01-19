@@ -12,11 +12,6 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     public ContinueButton continueButton;
 
     public Action OnContinue;
-    
-    public void ShowContinue()
-    {
-        continueButton.gameObject.SetActive(true);
-    }
 
     [Button]
     public void Continue()
