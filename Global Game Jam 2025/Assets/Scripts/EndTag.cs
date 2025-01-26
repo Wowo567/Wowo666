@@ -8,6 +8,7 @@ public class EndTag : MonoBehaviour
     private void Start()
     {
         StartCoroutine(nameof(WaitToOver));
+        GameManager.Instance.HideUI();
     }
 
     IEnumerator WaitToOver()

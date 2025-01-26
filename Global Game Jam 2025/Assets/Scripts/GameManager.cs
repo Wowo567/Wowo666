@@ -72,4 +72,9 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     {
         OnGameOver?.Invoke();
     }
+
+    public void HideUI()
+    {
+        Destroy(bubbleBar.gameObject);
+    }
 }
