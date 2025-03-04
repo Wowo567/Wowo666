@@ -6,10 +6,11 @@ using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D.Animation;
 
 namespace UI
 {
-    public class ChatBubble : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
+    public class ChatBubble : MonoBehaviour,IPointerDownHandler
     {
         public BubbleType type;
         public ChatBubbleState state = ChatBubbleState.Free;
@@ -17,10 +18,9 @@ namespace UI
         private Collider2D _collider2D;
 
         private ChatBubbleButton _curChatBubbleButton = null;
-        private ChatBubblePoint _curLockedPoint = null;
         
         private ChatBubblePoint _curHoveredPoint = null;
-        private List<ChatBubblePoint> _hoveredChatBubblePoints = new List<ChatBubblePoint>();
+        private readonly List<ChatBubblePoint> _hoveredChatBubblePoints = new List<ChatBubblePoint>();
         
         private void Awake()
         {
@@ -36,13 +36,21 @@ namespace UI
                 transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
                 
                 _hoveredChatBubblePoints.Clear();
-                foreach (ChatBubblePoint chatBubblePoint in ChatBubblePointManager.Instance.points)
+
+                List<Collider2D> results = new List<Collider2D>();
+                _collider2D.OverlapCollider(new ContactFilter2D(), results);
+                foreach (Collider2D result in results)
                 {
-                    if (chatBubblePoint.canAcceptedBubbleIDs.Contains(type) && _collider2D.OverlapPoint(chatBubblePoint.transform.position))
+                    ChatBubblePoint chatBubblePoint = result.GetComponent<ChatBubblePoint>();
+                    if (chatBubblePoint)
                     {
-                        _hoveredChatBubblePoints.Add(chatBubblePoint);
+                        if (chatBubblePoint.CanAcceptedBubbleIDs.Contains(type))
+                        {
+                            _hoveredChatBubblePoints.Add(result.GetComponent<ChatBubblePoint>());
+                        }
                     }
                 }
+                
                 float minDis = float.MaxValue;
                 ChatBubblePoint _hoverPoint = null;
                 foreach (ChatBubblePoint chatBubblePoint in _hoveredChatBubblePoints)
@@ -77,9 +85,9 @@ namespace UI
 
         private void ReleaseBubble()
         {
-            if (_curHoveredPoint != null)
+            if (_curHoveredPoint)
             {
-                LockToPoint(_curHoveredPoint);
+                TriggerBubble(_curHoveredPoint);
             }
             else
             {
@@ -87,14 +95,13 @@ namespace UI
             }
         }
 
-        public void LockToPoint(ChatBubblePoint chatBubblePoint)
+        private void TriggerBubble(ChatBubblePoint chatBubblePoint)
         {
             state = ChatBubbleState.Chat;
             
             gameObject.SetActive(false);
-            chatBubblePoint.Bubble(this);
-            _curLockedPoint = chatBubblePoint;
-            transform.DOMove(chatBubblePoint.transform.position, 0.2f);
+            chatBubblePoint.Bubble((int)type-1);
+            Destroy(gameObject);
         }
 
         private void GoHome()
@@ -113,7 +120,7 @@ namespace UI
                     transform.DOMove(newPos, 0.3f).OnComplete(() =>
                     {
                         Destroy(gameObject);
-                        _curChatBubbleButton.Release();
+                        _curChatBubbleButton.Reset();
                     });
                 }
             }
@@ -134,42 +141,12 @@ namespace UI
             if (state == ChatBubbleState.Chat)
             {
                 state = ChatBubbleState.Hold;
-                _curLockedPoint.Release();
-                _curLockedPoint = null;
             }
-        }
-        
-        public void SetFree()
-        {
-            if (state == ChatBubbleState.Chat)
-            {
-                gameObject.SetActive(true);
-                GoHome();
-            }
-        }
-        
-        public void SetHold()
-        {
-            if (state == ChatBubbleState.Chat)
-            {
-                gameObject.SetActive(true);
-                state = ChatBubbleState.Hold;
-            }
-        }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-
         }
 
         private void OnDestroy()
         {
             transform.DOKill();
-        }
-
-        public void SetChatBubbleButton(ChatBubbleButton unlockBubbleButton)
-        {
-            _curChatBubbleButton = unlockBubbleButton;
         }
     }
 

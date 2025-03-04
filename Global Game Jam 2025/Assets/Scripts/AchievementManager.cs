@@ -10,11 +10,11 @@ public class AchievementManager : MonoBehaviour
     
     private void Awake()
     {
-        ComicManager.Instance.OnComicCreated += OnComicCreated;
+        ComicManager.Instance.OnAchievementGot += OnAchievementGot;
         
         int achievementState = PlayerPrefs.GetInt(AchievementStateKey, 0);
         
-        Debug.Log("当前成就状态:" + Convert.ToString(achievementState,2));
+        Debug.Log("当前成就解锁状态:" + Convert.ToString(achievementState,2));
         
         for (int i = 0; i < 12; i++)
         {
@@ -23,9 +23,9 @@ public class AchievementManager : MonoBehaviour
     }
     
     [Button]
-    private void OnComicCreated(int id)
+    private void OnAchievementGot(int id)
     {
-        if (id >= 0 && id < 12)
+        if (id is >= 0 and < 12)
         {
             int achievementState = PlayerPrefs.GetInt(AchievementStateKey, 0);
             if ((achievementState & (1 << id)) == 0)

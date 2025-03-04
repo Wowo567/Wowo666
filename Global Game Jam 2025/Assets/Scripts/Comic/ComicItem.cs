@@ -66,11 +66,13 @@ namespace Comic
             //消失
             GreyShow(false);
             ColorShow(false);
+            
+            Init();
         }
 
         private void Start()
         {
-            Init();
+            //Init();
         }
 
         private void CheckType()
@@ -347,7 +349,7 @@ namespace Comic
 
         private void RemoveAction()
         {
-            GameManager.Instance.OnContinue -= OnContinue;
+            if (GameManager.Instance != null) GameManager.Instance.OnContinue -= OnContinue;
             if (type == ComicType.Bubble)
             {
                 _point.OnBubble-= OnBubble;

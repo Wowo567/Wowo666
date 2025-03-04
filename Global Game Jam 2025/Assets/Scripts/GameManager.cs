@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
         title.localScale = new Vector3(0, 0, 0);
         textMesh.color = new UnityEngine.Color(textMesh.color.r, textMesh.color.g, textMesh.color.b, 0);
-        bubbleBar.color = new UnityEngine.Color(bubbleBar.color.r, bubbleBar.color.g, bubbleBar.color.b, 0);
         
         ShowText();
     }
@@ -49,20 +48,11 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     }
     
     [Button]
-    public void ShowBubbleBar()
-    {
-        DOTween.To(() => bubbleBar.color, x => bubbleBar.color = x,
-            new UnityEngine.Color(bubbleBar.color.r, bubbleBar.color.g, bubbleBar.color.b, 1), 0.5f);
-    }
-    
-    [Button]
     public void Continue()
     {
         if (_isFirstContinue)
         {
             _isFirstContinue = false;
-            ShowBubbleBar();
-            ChatBubbleManager.Instance.UnlockBubbleButton();
         }
         PaperManager.Instance.CreateNewPaper();
         OnContinue?.Invoke();

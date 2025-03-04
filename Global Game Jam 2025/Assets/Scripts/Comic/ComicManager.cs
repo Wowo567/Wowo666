@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Comic;
 using Sirenix.OdinInspector;
 using UI;
-using UnityEditor;
 using UnityEngine;
 using WowoFramework.Singleton;
 
@@ -15,7 +13,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
 
     public Action<int> OnComicCreated;
     public Action<int> OnAchievementGot;
-    public Action<int> OnBubbleUnlocked;
+    public Action<int> OnBubbleUnlock;
 
     public ComicItem curComic
     {
@@ -60,6 +58,9 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         curComic = Instantiate(firstComic, PaperManager.Instance.CurComicsTrans).GetComponent<ComicItem>();
         _comicItems[0] = curComic;
         _index += 1;
+        Debug.Log($"CreateComic {!curComic} {curComic.name} ");
+        OnAchievementGot?.Invoke(curComic.GetAchievementID());
+        OnBubbleUnlock?.Invoke(curComic.GetUnlockBubbleID());
     }
 
     public void CreateComic(int id)
@@ -72,7 +73,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         _index += 1;
         OnComicCreated?.Invoke(id);
         OnAchievementGot?.Invoke(curComic.GetAchievementID());
-        OnBubbleUnlocked?.Invoke(curComic.GetUnlockBubbleID());
+        OnBubbleUnlock?.Invoke(curComic.GetUnlockBubbleID());
     }
 
     public void RemoveComic(ComicItem comicItem)

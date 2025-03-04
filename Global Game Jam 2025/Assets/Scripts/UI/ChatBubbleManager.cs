@@ -11,68 +11,71 @@ namespace UI
 {
     public class ChatBubbleManager : MonoBehaviourSingleton<ChatBubbleManager>
     {
-        public float height = 200;
-        private int _bubbleIndex = -1;
+        private static readonly string UnlockedBubbleStateKey = "UnlockedBubbleState";
 
-        private readonly List<RectTransform> _bubbles = new List<RectTransform>();
+        private ChatBubbleButton[] _bubbleButtons;
+        private CanvasGroup _canvasGroup;
 
         protected override void Awake()
         {
             base.Awake();
+
+            _bubbleButtons = GetComponentsInChildren<ChatBubbleButton>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+            
+            ComicManager.Instance.OnBubbleUnlock += OnBubbleUnlock;
+            
+            int unlockedBubbleState = PlayerPrefs.GetInt(UnlockedBubbleStateKey, 0);
+            Debug.Log("当前气泡解锁状态:" + Convert.ToString(unlockedBubbleState,2));
+            for (int i = 0; i < 4; i++)
+            {
+                if ((unlockedBubbleState & (1 << i)) != 0)
+                {
+                    _bubbleButtons[i].Unlock(true);
+                }
+            }
         }
 
         public void CreateChatBubble(ChatBubbleButton chatBubbleButton, GameObject chatBubblePrefab)
         {
-            Instantiate(chatBubblePrefab).GetComponent<ChatBubble>().SetHome(chatBubbleButton);
+            Instantiate(chatBubblePrefab, chatBubbleButton.transform.position, chatBubbleButton.transform.rotation)
+                .GetComponent<ChatBubble>().SetHome(chatBubbleButton);
         }
 
         [Button]
-        public ChatBubbleButton UnlockBubbleButton(int index = -1)
+        private void OnBubbleUnlock(int id)
         {
-            if (index == -1)
+            if (id is >= 0 and < 4)
             {
-                _bubbleIndex++;
-            }
-            else
-            {
-                if (_bubbleIndex + 1 != index)
+                int unlockedBubbleState = PlayerPrefs.GetInt(UnlockedBubbleStateKey, 0);
+                if ((unlockedBubbleState & (1 << id)) == 0)
                 {
-                    Debug.Log($"{_bubbleIndex} xxxxx {index}");
-                    return null;
-                }
-                else
-                {
-                    _bubbleIndex++;
+                    unlockedBubbleState = unlockedBubbleState | 1 << id;
+                    PlayerPrefs.SetInt(UnlockedBubbleStateKey, unlockedBubbleState);
+                    _bubbleButtons[id].Unlock(false);
                 }
             }
-            transform.GetChild(_bubbleIndex).gameObject.SetActive(true);
-            _bubbles.Add(transform.GetChild(_bubbleIndex).GetComponent<RectTransform>());
-            if (_bubbleIndex > 0)
-            {
-                transform.GetChild(_bubbleIndex).GetComponent<ChatBubbleButton>().Bubble();
-            }
-            RefreshLayout();
-            return transform.GetChild(_bubbleIndex).GetComponent<ChatBubbleButton>();
         }
 
-        private void RefreshLayout()
+        [Button]
+        private void ResetUnlockState()
         {
-            int count = _bubbles.Count;
-            float i = 0;
-            foreach (RectTransform rectTransform in _bubbles)
-            {
-                Vector2 pos = new Vector2(0, -i * height + (float)(count-1) / 2 * height);
-                if (i < count - 1)
-                {
-                    rectTransform.DOAnchorPos(pos, 0.2f);
-                }
-                else
-                {
-                    rectTransform.anchoredPosition = pos;
-                    rectTransform.DOScale(new Vector2(1, 1), 0.2f);
-                }
-                i++;
-            }
+            PlayerPrefs.SetInt(UnlockedBubbleStateKey, 0);
+        }
+        
+        public void ResetBubble(int curChatBubbleID)
+        {
+            _bubbleButtons[curChatBubbleID].Reset();
+        }
+
+        public void ShowUI()
+        {
+            _canvasGroup.DOFade(1, 0.5f);
+        }
+        
+        public void HideUI()
+        {
+            _canvasGroup.DOFade(0, 0.5f);
         }
     }
 }

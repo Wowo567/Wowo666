@@ -8,68 +8,48 @@ namespace UI
 {
     public class ChatBubblePoint : MonoBehaviour
     {
-        public bool x = false;
-        
-        [NonSerialized]
-        public bool isUsed = false;
-
         public Action<BubbleType> OnBubble;
         public Action OnBubbleRemove;
 
-        [NonSerialized] private ChatBubble _curChatBubble;
+         private int _curChatBubbleID = -1;
 
         [NonSerialized]
-        public List<BubbleType> canAcceptedBubbleIDs = new List<BubbleType>();
+        public List<BubbleType> CanAcceptedBubbleIDs = new List<BubbleType>();
         
         private void Awake()
         {
-            if (!x)
-            {
-                ChatBubblePointManager.Instance.AddPoint(this);   
-            }
+            ChatBubblePointManager.Instance.AddPoint(this);   
         }
 
         public void Init(List<BubbleType> validBubbleIDs)
         {
-            canAcceptedBubbleIDs = validBubbleIDs;
+            CanAcceptedBubbleIDs = validBubbleIDs;
         }
         
-        public void Bubble(ChatBubble chatBubble)
+        public void Bubble(int chatBubbleID)
         {
-            if (_curChatBubble)
+            if (_curChatBubbleID>=0)
             {
                 Release();
             }
             
-            isUsed = true;
-            _curChatBubble = chatBubble;
-            OnBubble?.Invoke(chatBubble.type);
-            Debug.Log($"Bubble!!! {_curChatBubble.type}");
-            transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
+            _curChatBubbleID = chatBubbleID;
+            OnBubble?.Invoke((BubbleType)chatBubbleID);
+            
+            Debug.Log($"触发气泡类型 {(BubbleType)chatBubbleID}");
         }
         
-        public void Release(bool isHold = false)
+        public void Release()
         {
-            isUsed = false;
-            if (_curChatBubble)
-            {
-                if (isHold)
-                {
-                    _curChatBubble.SetHold();
-                }
-                else
-                {
-                    _curChatBubble.SetFree();
-                }
-            }
-            _curChatBubble = null;
+            ChatBubbleManager.Instance.ResetBubble(_curChatBubbleID);
+            Debug.Log($"移除气泡类型 {(BubbleType)_curChatBubbleID}");
+            _curChatBubbleID = -1;
             OnBubbleRemove?.Invoke();
-            Debug.Log("ReleaseBubble!!!");
         }
 
         public void OnBubbleHover(BubbleType type)
         {
-            if (canAcceptedBubbleIDs.Contains(type))
+            if (CanAcceptedBubbleIDs.Contains(type))
             {
                 transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f);
             }
@@ -82,11 +62,7 @@ namespace UI
 
         private void OnDestroy()
         {
-            _curChatBubble?.SetFree();
-            if (!x)
-            {
-                ChatBubblePointManager.Instance?.RemovePoint(this);   
-            }
+            ChatBubblePointManager.Instance?.RemovePoint(this);   
         }
     }
 }

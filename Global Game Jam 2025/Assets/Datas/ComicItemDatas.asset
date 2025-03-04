@@ -51,9 +51,9 @@ MonoBehaviour:
     prefab: {fileID: 0}
   - id: 1
     bubble1: 11
-    bubble2: 0
-    bubble3: 0
-    bubble4: 0
+    bubble2: 12
+    bubble3: 13
+    bubble4: 14
     prefabName: ComicItem_0-1
     achievement: 3
     unlockBubble: 0
