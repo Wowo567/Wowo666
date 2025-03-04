@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
             ShowBubbleBar();
             ChatBubbleManager.Instance.UnlockBubbleButton();
         }
-        PaperManager.Instance.ChangePaper();
+        PaperManager.Instance.CreateNewPaper();
         OnContinue?.Invoke();
     }
 

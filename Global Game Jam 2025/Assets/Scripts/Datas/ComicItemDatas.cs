@@ -15,6 +15,8 @@ namespace Datas
         public int bubble3;
         public int bubble4;
         public string prefabName;
+        public int achievement;
+        public int unlockBubble;
         public GameObject prefab;
         public Dictionary<BubbleType, int> nextComics;
     }

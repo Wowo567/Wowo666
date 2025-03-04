@@ -14,10 +14,10 @@ namespace Comic
 {
     public enum BubbleType
     {
-        Happy = 1,
-        Angry = 2,
-        Sad = 3,
-        Wait = 4,
+        Tell = 1,
+        Run = 2,
+        Shock = 3,
+        Love = 4,
     }
 
     public enum ComicType
@@ -50,7 +50,7 @@ namespace Comic
         private float _animTime;
 
 
-        private BubbleType _bubbleType = BubbleType.Happy;
+        private BubbleType _bubbleType = BubbleType.Tell;
         public void SetPosition()
         {
             recordedPosition = transform.position;
@@ -109,7 +109,7 @@ namespace Comic
                 .AppendInterval(_animTime);
             
             //出现下一个漫画
-            sequence.AppendCallback(() => ShowNext(BubbleType.Happy));
+            sequence.AppendCallback(() => ShowNext(BubbleType.Tell));
         }
         
         private void ClickTransition()
@@ -307,7 +307,7 @@ namespace Comic
         private void OnContinue()
         {
             AudioManager.Instance.PlaySoundEffect("Remove");
-            int next = _comicData.nextComics[BubbleType.Happy];
+            int next = _comicData.nextComics[BubbleType.Tell];
             ComicManager.Instance.NextPage();
             ComicManager.Instance.CreateComic(next);
             CameraManager.Instance.ChangeView();
@@ -353,6 +353,16 @@ namespace Comic
                 _point.OnBubble-= OnBubble;
                 _point.OnBubbleRemove-= OnBubbleRemove;
             }
+        }
+
+        public int GetAchievementID()
+        {
+            return _comicData.achievement;
+        }
+
+        public int GetUnlockBubbleID()
+        {
+            return _comicData.unlockBubble;
         }
     }
 }

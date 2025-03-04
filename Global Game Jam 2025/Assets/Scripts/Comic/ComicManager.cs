@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Comic;
@@ -11,6 +12,10 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
 {
     public GameObject firstComic;
     private ComicItem _curComic;
+
+    public Action<int> OnComicCreated;
+    public Action<int> OnAchievementGot;
+    public Action<int> OnBubbleUnlocked;
 
     public ComicItem curComic
     {
@@ -39,7 +44,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     [Button("Record Position")]
     private void RecordPosition()
     {
-        foreach (var item in PaperManager.Instance.comicsTrans.GetComponentsInChildren<ComicItem>(true))
+        foreach (var item in PaperManager.Instance.CurComicsTrans.GetComponentsInChildren<ComicItem>(true))
         {
             item.SetPosition();
             //item.recordedPosition = item.transform.position;
@@ -52,7 +57,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
         _comicItems = new ComicItem[10];
-        curComic = Instantiate(firstComic, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
+        curComic = Instantiate(firstComic, PaperManager.Instance.CurComicsTrans).GetComponent<ComicItem>();
         _comicItems[0] = curComic;
         _index += 1;
     }
@@ -62,9 +67,12 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         Debug.Log("CreateComic"+id);
         GameObject nextPrefab = _datasDic[id].prefab;
         lastComic = curComic;
-        curComic = Instantiate(nextPrefab, PaperManager.Instance.comicsTrans).GetComponent<ComicItem>();
+        curComic = Instantiate(nextPrefab, PaperManager.Instance.CurComicsTrans).GetComponent<ComicItem>();
         _comicItems[_index] = curComic;
         _index += 1;
+        OnComicCreated?.Invoke(id);
+        OnAchievementGot?.Invoke(curComic.GetAchievementID());
+        OnBubbleUnlocked?.Invoke(curComic.GetUnlockBubbleID());
     }
 
     public void RemoveComic(ComicItem comicItem)

@@ -9,40 +9,58 @@ namespace UI
 {
     public class PaperManager : MonoBehaviourSingleton<PaperManager>
     {
-        public GameObject paperPrefab;
+        [SerializeField, LabelText("纸页预制体")] private GameObject paperPrefab;
+        [SerializeField, LabelText("已完成纸堆")] private Transform finishedStackTrans;
+        [SerializeField, LabelText("绘制中纸堆")] private Transform paintingPapers;
+        
+        private Transform _curPaper;
+        private Transform _comicsTrans;
 
-        public Transform curPaper;
+        public Transform CurPaper => _curPaper;
+        public Transform CurComicsTrans => _comicsTrans;
 
-        public Transform comicsTrans;
-
-        [Button]
-        public void ChangePaper()
+        [Button("换纸")]
+        public void CreateNewPaper()
         {
-            Transform abandonPaper = curPaper;
-            
-            curPaper = Instantiate(paperPrefab).transform;
-            comicsTrans = curPaper.Find("Comics");
-            curPaper.ResetAllLocal();
-            curPaper.localScale = new Vector3(1.1f, 1.1f, 1.1f);
-            
-            ChatBubblePoint[] points = abandonPaper.GetComponentsInChildren<ChatBubblePoint>();
-            foreach (ChatBubblePoint point in points)
+            if (_curPaper)
             {
-                point.Release();
+                Transform finishedPaper = _curPaper;
+            
+                SpriteRenderer[] spriteRenderers = finishedPaper.GetComponentsInChildren<SpriteRenderer>();
+                foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+                {
+                    spriteRenderer.sortingOrder = 1;
+                }
+                ChatBubblePoint[] points = finishedPaper.GetComponentsInChildren<ChatBubblePoint>();
+                foreach (ChatBubblePoint point in points)
+                {
+                    point.Release();
+                }
+                finishedPaper.SetParent(finishedStackTrans,true);
+                finishedPaper.DOLocalMove(new Vector3(0, 0, 0), 1.0f).OnComplete(() =>
+                {
+                    if (finishedStackTrans.childCount > 1)
+                    {
+                        Destroy(finishedStackTrans.GetChild(0).gameObject);   
+                    }
+                    foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+                    {
+                        spriteRenderer.sortingOrder = 0;
+                    }
+                });   
             }
-            abandonPaper.GetComponent<SpriteRenderer>().sortingOrder++;
-            abandonPaper.DOMove(new Vector3(30, 30, 0), 1.0f).OnComplete(() =>
-            {
-                Destroy(abandonPaper.gameObject);
-            });
+
+            _curPaper = Instantiate(paperPrefab, paintingPapers).transform;
+            _comicsTrans = _curPaper.Find("Comics");
+            _curPaper.ResetAllLocal();
         }
 
-        [Button]
+        [Button("显示继续按键")]
         public void ShowContinue()
         {
-            curPaper.Find("continue").gameObject.SetActive(true);
-            curPaper.Find("continue").GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, 0);
-            curPaper.Find("continue").GetComponent<SpriteRenderer>().DOFade(1, 0.5f);
+            _curPaper.Find("continue").gameObject.SetActive(true);
+            _curPaper.Find("continue").GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, 0);
+            _curPaper.Find("continue").GetComponent<SpriteRenderer>().DOFade(1, 0.5f);
         }
     }
 }
