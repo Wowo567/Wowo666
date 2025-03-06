@@ -18,7 +18,7 @@ namespace UI
 
         public Transform CurPaper => _curPaper;
         public Transform CurComicsTrans => _comicsTrans;
-
+        
         [Button("换纸")]
         public void CreateNewPaper()
         {
@@ -51,6 +51,7 @@ namespace UI
             }
 
             _curPaper = Instantiate(paperPrefab, paintingPapers).transform;
+            _curPaper.Find("continue").gameObject.SetActive(false);
             _comicsTrans = _curPaper.Find("Comics");
             _curPaper.ResetAllLocal();
         }

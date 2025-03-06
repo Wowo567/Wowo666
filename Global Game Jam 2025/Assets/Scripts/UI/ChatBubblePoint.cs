@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections.Generic;
 using Comic;
 using DG.Tweening;
@@ -8,6 +8,12 @@ namespace UI
 {
     public class ChatBubblePoint : MonoBehaviour
     {
+        [SerializeField]
+        private SpriteRenderer spriteRenderer_Grey;
+        [SerializeField]
+        private SpriteRenderer spriteRenderer_Color;
+        
+        
         public Action<BubbleType> OnBubble;
         public Action OnBubbleRemove;
 
@@ -28,6 +34,9 @@ namespace UI
         
         public void Bubble(int chatBubbleID)
         {
+            spriteRenderer_Grey.enabled = false;
+            spriteRenderer_Color.enabled = false;
+            
             if (_curChatBubbleID>=0)
             {
                 Release();
@@ -51,13 +60,23 @@ namespace UI
         {
             if (CanAcceptedBubbleIDs.Contains(type))
             {
-                transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f);
+                if (_curChatBubbleID > -1)
+                {
+                    spriteRenderer_Grey.enabled = false;
+                    spriteRenderer_Color.enabled = true;
+                }
+                else
+                {
+                    spriteRenderer_Grey.enabled = true;
+                    spriteRenderer_Color.enabled = false;
+                }
             }
         }
 
         public void OnBubbleExit()
         {
-            transform.DOScale(new Vector3(1f, 1f, 1f), 0.2f);
+            spriteRenderer_Grey.enabled = false;
+            spriteRenderer_Color.enabled = false;
         }
 
         private void OnDestroy()

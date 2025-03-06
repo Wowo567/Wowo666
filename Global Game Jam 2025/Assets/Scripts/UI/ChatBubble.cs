@@ -38,7 +38,7 @@ namespace UI
                 _hoveredChatBubblePoints.Clear();
 
                 List<Collider2D> results = new List<Collider2D>();
-                _collider2D.OverlapCollider(new ContactFilter2D(), results);
+                _collider2D.Overlap(new ContactFilter2D(), results);
                 foreach (Collider2D result in results)
                 {
                     ChatBubblePoint chatBubblePoint = result.GetComponent<ChatBubblePoint>();

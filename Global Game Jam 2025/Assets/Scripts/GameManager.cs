@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         title.localScale = new Vector3(0, 0, 0);
         textMesh.color = new UnityEngine.Color(textMesh.color.r, textMesh.color.g, textMesh.color.b, 0);
         
+        PaperManager.Instance.CreateNewPaper();
+        
         ShowText();
     }
 

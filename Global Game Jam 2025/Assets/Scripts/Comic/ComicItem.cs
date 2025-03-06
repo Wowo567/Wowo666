@@ -53,7 +53,7 @@ namespace Comic
         private BubbleType _bubbleType = BubbleType.Tell;
         public void SetPosition()
         {
-            recordedPosition = transform.position;
+            recordedPosition = transform.localPosition;
             //PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
             //PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
         }
@@ -217,7 +217,6 @@ namespace Comic
         {
             //初始位置
             _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
-            transform.position = recordedPosition;// _comicData.position;
             CameraManager.Instance.ChangeCamera();
             CheckAnim();
             CheckType();
@@ -365,6 +364,12 @@ namespace Comic
         public int GetUnlockBubbleID()
         {
             return _comicData.unlockBubble;
+        }
+        
+        [Button("记录位置")]
+        public void RecordPosition()
+        {
+            recordedPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
         }
     }
 }

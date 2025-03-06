@@ -56,6 +56,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
         _comicItems = new ComicItem[10];
         curComic = Instantiate(firstComic, PaperManager.Instance.CurComicsTrans).GetComponent<ComicItem>();
+        curComic.transform.localPosition = curComic.recordedPosition;
         _comicItems[0] = curComic;
         _index += 1;
         Debug.Log($"CreateComic {!curComic} {curComic.name} ");
