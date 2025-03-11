@@ -56,7 +56,7 @@ Material:
     - _DissolveStrength: 500
     - _DissolveValue: 0.268
     - _EnableExternalAlpha: 0
-    - _GradientValue: 0.895
+    - _GradientValue: 1
     - _GradientWidth: 0.02
     - _ZWrite: 0
     m_Colors:
