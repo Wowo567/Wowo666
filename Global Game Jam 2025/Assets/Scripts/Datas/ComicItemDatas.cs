@@ -10,15 +10,17 @@ namespace Datas
     public class ComicData
     {
         public int id;
-        public int bubble1;
-        public int bubble2;
-        public int bubble3;
-        public int bubble4;
+        public string bubble1;
+        public string bubble2;
+        public string bubble3;
+        public string bubble4;
         public string prefabName;
         public int achievement;
         public int unlockBubble;
+        public string textDubbing;
         public GameObject prefab;
         public Dictionary<BubbleType, int> nextComics;
+        public Dictionary<BubbleType, string> bubbleTextDubbing;
     }
 
     [ExcelAsset]
@@ -30,16 +32,6 @@ namespace Datas
         private Dictionary<int, ComicData> datasDic;
 
         public Dictionary<int, ComicData> DatasDic => datasDic;
-
-        // 将字符串转换为 Vector3
-        private Vector3 GetPosition(string str)
-        {
-            string[] parts = str.Split(';');
-            float x = float.Parse(parts[0]);
-            float y = float.Parse(parts[1]);
-            float z = float.Parse(parts[2]);
-            return new Vector3(x, y, z);
-        }
 
         // 初始化数据
         public void Init()
@@ -53,16 +45,38 @@ namespace Datas
                 // 初始化 nextComics 字典
                 item.nextComics = new Dictionary<BubbleType, int>
                 {
-                    { (BubbleType)1, item.bubble1 },
-                    { (BubbleType)2, item.bubble2 },
-                    { (BubbleType)3, item.bubble3 },
-                    { (BubbleType)4, item.bubble4 }
+                    { (BubbleType)0, int.Parse(item.bubble1.Split(';')[0]) },
+                    { (BubbleType)1, int.Parse(item.bubble2.Split(';')[0]) },
+                    { (BubbleType)2, int.Parse(item.bubble3.Split(';')[0]) },
+                    { (BubbleType)3, int.Parse(item.bubble4.Split(';')[0]) }
+                };
+
+                item.bubbleTextDubbing = new Dictionary<BubbleType, string>
+                {
+                    { (BubbleType)0, GetBubbleDubbingString(item.bubble1) },
+                    { (BubbleType)1, GetBubbleDubbingString(item.bubble2) },
+                    { (BubbleType)2, GetBubbleDubbingString(item.bubble3) },
+                    { (BubbleType)3, GetBubbleDubbingString(item.bubble4) }
                 };
 
                 // 将 item 添加到 datasDic 中
                 datasDic.Add(item.id, item);
             }
         }
+
+        private string GetBubbleDubbingString(string str)
+        {
+            string[] strs = str.Split(';');
+            if (strs.Length > 1)
+            {
+                return strs[1];
+            }
+            else
+            {
+                return "";
+            }
+        }
+            
         
     }
 }

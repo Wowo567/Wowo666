@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   datas:
   - id: 11
-    bubble1: 12
-    bubble2: 22
-    bubble3: 32
+    bubble1: 12;1_1_1
+    bubble2: 22;1_1_2
+    bubble3: 32;1_1_3
     bubble4: 0
     prefabName: ComicItem_1-1
     achievement: -1
-    unlockBubble: -1
+    unlockBubble: 0
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 12
     bubble1: 13
@@ -30,6 +31,7 @@ MonoBehaviour:
     prefabName: ComicItem_1-2
     achievement: 0
     unlockBubble: -1
+    textDubbing: 1_2
     prefab: {fileID: 0}
   - id: 13
     bubble1: 14
@@ -39,6 +41,7 @@ MonoBehaviour:
     prefabName: ComicItem_1-3
     achievement: 1
     unlockBubble: -1
+    textDubbing: 1_3
     prefab: {fileID: 0}
   - id: 14
     bubble1: 1
@@ -48,6 +51,7 @@ MonoBehaviour:
     prefabName: ComicItem_1-4
     achievement: 2
     unlockBubble: -1
+    textDubbing: 1_4
     prefab: {fileID: 0}
   - id: 1
     bubble1: 11
@@ -57,6 +61,7 @@ MonoBehaviour:
     prefabName: ComicItem_0-1
     achievement: 3
     unlockBubble: 0
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 2
     bubble1: 11
@@ -66,6 +71,7 @@ MonoBehaviour:
     prefabName: ComicItem_0-2
     achievement: 4
     unlockBubble: 1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 3
     bubble1: 0
@@ -75,6 +81,7 @@ MonoBehaviour:
     prefabName: ComicItem_0-3
     achievement: 5
     unlockBubble: 2
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 22
     bubble1: 23
@@ -84,6 +91,7 @@ MonoBehaviour:
     prefabName: ComicItem_2-2
     achievement: 6
     unlockBubble: 3
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 23
     bubble1: 24
@@ -93,6 +101,7 @@ MonoBehaviour:
     prefabName: ComicItem_2-3
     achievement: 7
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 24
     bubble1: 25
@@ -102,6 +111,7 @@ MonoBehaviour:
     prefabName: ComicItem_2-4
     achievement: 8
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 25
     bubble1: 2
@@ -111,6 +121,7 @@ MonoBehaviour:
     prefabName: ComicItem_2-5
     achievement: 9
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 32
     bubble1: 33
@@ -120,6 +131,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-2
     achievement: 10
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 33
     bubble1: 34
@@ -129,6 +141,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-3
     achievement: 11
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 34
     bubble1: 0
@@ -138,6 +151,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-4
     achievement: -1
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 35
     bubble1: 36
@@ -147,6 +161,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-5
     achievement: -1
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 36
     bubble1: 37
@@ -156,6 +171,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-6
     achievement: -1
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 37
     bubble1: 2
@@ -165,6 +181,7 @@ MonoBehaviour:
     prefabName: ComicItem_3-7
     achievement: -1
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 43
     bubble1: 0
@@ -174,6 +191,7 @@ MonoBehaviour:
     prefabName: ComicItem_4-3
     achievement: -1
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}
   - id: 44
     bubble1: 3
@@ -183,4 +201,5 @@ MonoBehaviour:
     prefabName: ComicItem_4-4
     achievement: -1
     unlockBubble: -1
+    textDubbing: 
     prefab: {fileID: 0}

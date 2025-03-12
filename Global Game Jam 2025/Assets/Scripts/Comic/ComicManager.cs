@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Comic;
 using Sirenix.OdinInspector;
+using TextDubbing;
 using UI;
 using UnityEngine;
 using WowoFramework.Singleton;
@@ -42,7 +43,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     [Button("Record Position")]
     private void RecordPosition()
     {
-        foreach (var item in PaperManager.Instance.CurComicsTrans.GetComponentsInChildren<ComicItem>(true))
+        foreach (var item in GameObject.Find("PaintingStack").GetComponentsInChildren<ComicItem>(true))
         {
             item.SetPosition();
             //item.recordedPosition = item.transform.position;
@@ -56,12 +57,26 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
         _comicItems = new ComicItem[10];
         curComic = Instantiate(firstComic, PaperManager.Instance.CurComicsTrans).GetComponent<ComicItem>();
-        curComic.transform.localPosition = curComic.recordedPosition;
+        //Debug.Log("position-----"+gameObject.name+"   "+curComic.transform.localPosition );
         _comicItems[0] = curComic;
         _index += 1;
         Debug.Log($"CreateComic {!curComic} {curComic.name} ");
         OnAchievementGot?.Invoke(curComic.GetAchievementID());
         OnBubbleUnlock?.Invoke(curComic.GetUnlockBubbleID());
+    }
+
+    private void Update()
+    {
+        CheckShowNext();
+    }
+
+    private void CheckShowNext()
+    {
+        if (curComic.animPlayFinish && TextDubbingManager.Instance.curClipFinish)
+        {
+            Debug.Log("curComic.ShowFinish()====="+curComic.gameObject.name);
+            curComic.ShowFinish();
+        }
     }
 
     public void CreateComic(int id)

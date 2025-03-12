@@ -125,7 +125,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8264463, y: 0.8264463, z: 0.8264463}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6744353417181439101}
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 14
   type: 4
-  recordedPosition: {x: 0.13200036, y: -6.347, z: 0}
+  recordedPosition: {x: -0.03, y: -4.41, z: 0}
 --- !u!95 &3177098871069157273
 Animator:
   serializedVersion: 5
@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 9214011422838603381}
   - component: {fileID: 8888579927051976218}
   m_Layer: 0
-  m_Name: beijing
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -470,7 +470,7 @@ GameObject:
   - component: {fileID: 7414291403945157032}
   - component: {fileID: 1030980433332416221}
   m_Layer: 0
-  m_Name: beijing (1)
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

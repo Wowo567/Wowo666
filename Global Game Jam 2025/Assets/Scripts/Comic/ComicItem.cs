@@ -4,6 +4,8 @@ using System.Linq;
 using Datas;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
+using TextDubbing;
 using UI;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -14,10 +16,10 @@ namespace Comic
 {
     public enum BubbleType
     {
-        Tell = 1,
-        Run = 2,
-        Shock = 3,
-        Love = 4,
+        Tell = 0,
+        Run = 1,
+        Shock = 2,
+        Love = 3,
     }
 
     public enum ComicType
@@ -30,16 +32,20 @@ namespace Comic
 
     public class ComicItem : MonoBehaviour
     {
+        private const string MaskPrefabPath = "Prefabs/ComicItemParts/Mask";
+        
         public int id;
         public ComicType type;
-        private ComicData _comicData;
+        public ComicData ComicData{ get; private set; }
         private ComicItem _nextComic;
         
         private ChatBubblePoint _point;
-        private Grey[]  _grey;
-        private Color[]  _color;
+        //private Grey[]  _grey;
+        //private Color[]  _color;
+        private List<SpriteRenderer> _bubbleParts;
+        private Transform _greyTrans, _colorTrans;
 
-        private float fadeTime = 1f;
+        private float _fadeTime = 0.5f;
 
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
@@ -51,29 +57,79 @@ namespace Comic
 
 
         private BubbleType _bubbleType = BubbleType.Tell;
+        private bool _haveBubble = false;
+
+        //判断动画是否完成
+        public bool animPlayFinish { get; private set; }
+        //显示/擦除
+        private BrushTextureSprite _greyBrush,_colorBrush;
+
         public void SetPosition()
         {
             recordedPosition = transform.localPosition;
-            //PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
-            //PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(gameObject);
+            PrefabUtility.ApplyPrefabInstance(gameObject, InteractionMode.AutomatedAction);
         }
 
         private void Awake()
         {
-            _grey = transform.GetComponentsInChildren<Grey>();
-            _color = transform.GetComponentsInChildren<Color>();
+             transform.localPosition = recordedPosition;
+            _greyTrans = transform.Find("Content/Grey");
+            _colorTrans = transform.Find("Content/Color");
+            _bubbleParts = new List<SpriteRenderer>();
+
+            //添加Grey/Color以及控制显示消除的脚本
+            AddMask();
+            AddComponents();
+
             _animator = GetComponent<Animator>();
-            //消失
-            GreyShow(false);
-            ColorShow(false);
-            
+            _greyBrush =_greyTrans.GetComponentInChildren<BrushTextureSprite>();
+            _colorBrush =_colorTrans.GetComponentInChildren<BrushTextureSprite>();
+
             Init();
         }
 
-        private void Start()
+        private void AddMask()
         {
-            //Init();
+            if (_greyTrans.Find("Mask") == null) Instantiate(Resources.Load<GameObject>(MaskPrefabPath), _greyTrans);
+            if (_colorTrans.Find("Mask") == null) Instantiate(Resources.Load<GameObject>(MaskPrefabPath), _colorTrans);
         }
+        
+        private void AddComponents()
+        {
+            AddComponentToAllChildren<Grey>(_greyTrans);
+            AddComponentToAllChildren<Color>(_colorTrans);
+
+            foreach (var item in transform.Find("Content").GetComponentsInChildren<SpriteRenderer>())
+            {
+                //不是蒙版和气泡则受影响
+                if (!item.name.Contains("Bubble")&&!item.name.Contains("Mask"))
+                {
+                    item.AddComponent<WorldSpaceMaskController>();
+                }
+                else if (item.name.Contains("Bubble") && type == ComicType.Bubble)
+                {
+                    SpriteRenderer spriteRenderer = item.GetComponent<SpriteRenderer>();
+                    spriteRenderer.color = new UnityEngine.Color(1, 1, 1, 0);
+                    _bubbleParts.Add(spriteRenderer);
+                }
+
+            }
+        }
+        public void AddComponentToAllChildren<T>(Transform parent) where T : Component
+        {
+            if (parent == null) return;
+
+            // 递归遍历所有子节点添加组件（如果没有）
+            foreach (Transform child in parent)
+            {
+                if (child.GetComponent<T>() == null)
+                {
+                    child.gameObject.AddComponent<T>();
+                }
+            }
+        }
+        
 
         private void CheckType()
         {
@@ -82,11 +138,11 @@ namespace Comic
                 case ComicType.Transition:
                     Transition();
                     break;
+                case ComicType.Bubble:
+                    OnBubbleColorBrushFinish();
+                    break;
                 case ComicType.ClickTransition:
                     ClickTransition();
-                    break;
-                case ComicType.Bubble:
-                    Bubble();
                     break;
                 case ComicType.ClickTransitionBubble:
                     ClickTransitionBubble();
@@ -96,35 +152,26 @@ namespace Comic
 
         private void Transition()
         {
+         
             Sequence sequence = DOTween.Sequence();
-
-            // 显示线稿并等待完成
-            sequence.AppendCallback(() => GreyShow(true,fadeTime))
-                .AppendInterval(fadeTime);  // 确保 fadeTime 时间结束
-
-            // 然后显示彩色内容
-            sequence.AppendCallback(() => ColorShow(true,fadeTime))
-                .AppendInterval(fadeTime);
             
             // 显示动画
             sequence.AppendCallback(ShowAnim)
                 .AppendInterval(_animTime);
             
-            //出现下一个漫画
-            sequence.AppendCallback(() => ShowNext(BubbleType.Tell));
+            sequence.AppendCallback(AnimFinish);
+            //配音播放完成再出现
+        }
+
+        private void AnimFinish()
+        {   
+            animPlayFinish = true;
         }
         
         private void ClickTransition()
         {
             GameManager.Instance.OnContinue += OnContinue;
             Sequence sequence = DOTween.Sequence();
-            // 显示线稿并等待完成
-            sequence.AppendCallback(() => GreyShow(true,fadeTime))
-                .AppendInterval(fadeTime);  // 确保 fadeTime 时间结束
-
-            // 然后显示彩色内容
-            sequence.AppendCallback(() => ColorShow(true,fadeTime))
-                .AppendInterval(fadeTime);
             
             // 显示动画
             sequence.AppendCallback(ShowAnim)
@@ -164,17 +211,27 @@ namespace Comic
 
         private void ShowAnim()
         {
-           _animator.SetInteger("Type", (int)_bubbleType);
+           _animator.SetInteger("Type", (int)(_bubbleType+1));
+           CheckAnim();
         }
 
+        private void ShowBubble(float fadeTime)
+        {
+            foreach (var item in _bubbleParts)
+            {
+                item.DOFade(1, fadeTime);
+            }   
+        }
+        
         private void Bubble()
         {
-            Debug.Log("Bubble-------"+gameObject.name);
-            //显示线稿
-            GreyShow(true,fadeTime);
+            Sequence sequence = DOTween.Sequence();
+            // 显示气泡相关图片并等待完成
+            sequence.AppendCallback(() => ShowBubble(_fadeTime)).AppendInterval(_fadeTime);
+            sequence.AppendCallback(ShowFinish);
         
             _point = GetComponentInChildren<ChatBubblePoint>();
-            _point.Init(_comicData.nextComics.Keys.ToList());
+            _point.Init(ComicData.nextComics.Keys.ToList());
             _point.OnBubble+= OnBubble;
             _point.OnBubbleRemove+= OnBubbleRemove;
         }
@@ -183,13 +240,6 @@ namespace Comic
         {
             GameManager.Instance.OnContinue += OnContinue;
             Sequence sequence = DOTween.Sequence();
-            // 显示线稿并等待完成
-            sequence.AppendCallback(() => GreyShow(true,fadeTime))
-                .AppendInterval(fadeTime);  // 确保 fadeTime 时间结束
-
-            // 然后显示彩色内容
-            sequence.AppendCallback(() => ColorShow(true,fadeTime))
-                .AppendInterval(fadeTime);
             
             //出现Continue
             sequence.AppendCallback(() => ShowContinue());
@@ -197,9 +247,12 @@ namespace Comic
             CameraManager.Instance.Recover();
         
             _point = GetComponentInChildren<ChatBubblePoint>();
-            _point.Init(_comicData.nextComics.Keys.ToList());
-            _point.OnBubble+= OnBubble;
-            _point.OnBubbleRemove+= OnBubbleRemove;
+            if (_point)
+            {
+                _point.Init(ComicData.nextComics.Keys.ToList());
+                _point.OnBubble += OnBubble;
+                _point.OnBubbleRemove += OnBubbleRemove;
+            }
         }
 
         private void CheckAnim()
@@ -210,90 +263,46 @@ namespace Comic
                 return;
             }
 
-            _animTime = GetAnimationDuration("Type" + (int)type);
+            Debug.Log("_bubbleType"+_bubbleType);
+            _animTime = GetAnimationDuration("Type" + (int)(_bubbleType + 1));
         }
 
         private void Init()
         {
             //初始位置
-            _comicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
+            ComicData = DatasManager.Instance.comicItemDatas.DatasDic[id];
             CameraManager.Instance.ChangeCamera();
-            CheckAnim();
-            CheckType();
-            CheckBubble();
-        }
 
-        private void GreyShow(bool isShow,float fadeTime = 0) 
-        {
-            if (fadeTime == 0)
-            {
-                foreach (var item in _grey)
-                {
-                    item.GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, isShow ? 1 : 0);
-                }
-            }
-            else
-            {
-                foreach (var item in _grey)
-                {
-                    item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
-                }   
-            }
-        }
-        
-        private void ColorShow(bool isShow,float fadeTime = 0)
-        {
-            if (fadeTime == 0)
-            {
-                foreach (var item in _color)
-                {
-                    item.GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, isShow ? 1 : 0);
-                }
-            }
-            else
-            {
-                foreach (var item in _color )
-                {
-                    item.GetComponent<SpriteRenderer>().DOFade(isShow ? 1 : 0, fadeTime);
-                }
-            }
+            animPlayFinish = false;
             
-            if (isShow)
-            {
-                AudioManager.Instance.PlaySoundEffect("ShowColor");
-                GreyShow(false, fadeTime);
-            }
+            //隐藏UI
+            ChatBubbleManager.Instance.HideUI();
         }
         
         private void OnBubble(BubbleType type)
-        { 
-            Debug.Log("ShowNext------");
+        {
+            ChatBubbleManager.Instance.HideUI();
             AudioManager.Instance.PlaySoundEffect("OnBubble");
-            
+        
+            _haveBubble = true;
             _bubbleType = type;
-            
+            // 显示彩色内容
+            _colorBrush.enabled = true;
+        }
+
+        private void OnBubbleColorBrushFinish()
+        {
             Sequence sequence = DOTween.Sequence();
-            // 然后显示彩色内容
-            sequence.AppendCallback(() => ColorShow(true,fadeTime))
-                .AppendInterval(fadeTime);
             // 显示动画
             sequence.AppendCallback(ShowAnim)
                 .AppendInterval(_animTime);
-           
-           // if (gameObject.name.Contains("ComicItem_3-4"))
-            {
-           //     ShowNext(type);
-            }
-           // else
-            {
-                sequence.AppendCallback(() =>  ShowNext(type));
-            }
+            
+            sequence.AppendCallback(AnimFinish);
         }
 
-        private void ShowNext(BubbleType type)
+        private void ShowNext()
         {
-            Debug.Log("ShowNext------");
-            int next = _comicData.nextComics[type];
+            int next = ComicData.nextComics[_bubbleType];
             if (next == 0)
             {
                 //没有故事线
@@ -303,12 +312,25 @@ namespace Comic
                 ComicManager.Instance.CreateComic(next);
             }
         }
-        
+
+        public void ShowFinish()
+        {
+            if (type == ComicType.Transition || (type == ComicType.Bubble && _haveBubble))
+            {
+                Debug.Log("ShowNext1");
+                ShowNext();
+            }
+            else
+            {
+                ChatBubbleManager.Instance.ShowUI();
+                animPlayFinish = false;
+            }
+        }
         
         private void OnContinue()
         {
             AudioManager.Instance.PlaySoundEffect("Remove");
-            int next = _comicData.nextComics[BubbleType.Tell];
+            int next = ComicData.nextComics[BubbleType.Tell];
             ComicManager.Instance.NextPage();
             ComicManager.Instance.CreateComic(next);
             CameraManager.Instance.ChangeView();
@@ -318,29 +340,17 @@ namespace Comic
         {
             AudioManager.Instance.PlaySoundEffect("Remove");
             Sequence sequence = DOTween.Sequence();
-            // 消失
-            sequence.AppendCallback(() => ColorShow(false,fadeTime))
-                .AppendInterval(fadeTime);
+            
             //移除之后的漫画
             sequence.AppendCallback(() => ComicManager.Instance.RemoveComic(this));
         }
 
         public void Remove()
         {
-            ColorShow(false,fadeTime);
-            GreyShow(false,fadeTime);
-            Sequence sequence = DOTween.Sequence();
-            // 消失
-            sequence.AppendInterval(fadeTime);
-            //移除这个漫画
-            sequence.AppendCallback(() => DestroyImmediate(gameObject));
+            //_greyBrush.isBrush = false;
+            _colorBrush.isBrush = false;
         }
-
-        private void CheckBubble()
-        {
-            //GetComponent(bubble)
-        }
-
+        
         private void OnDestroy()
         {
             RemoveAction();
@@ -349,27 +359,64 @@ namespace Comic
         private void RemoveAction()
         {
             if (GameManager.Instance != null) GameManager.Instance.OnContinue -= OnContinue;
-            if (type == ComicType.Bubble)
+            if (type == ComicType.Bubble && _point != null)
             {
-                _point.OnBubble-= OnBubble;
-                _point.OnBubbleRemove-= OnBubbleRemove;
+                _point.OnBubble -= OnBubble;
+                _point.OnBubbleRemove -= OnBubbleRemove;
             }
         }
 
         public int GetAchievementID()
         {
-            return _comicData.achievement;
+            return ComicData.achievement;
         }
 
         public int GetUnlockBubbleID()
         {
-            return _comicData.unlockBubble;
+            return ComicData.unlockBubble;
         }
         
         [Button("记录位置")]
         public void RecordPosition()
         {
             recordedPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+        }
+
+        public void BrushFinish(BrushType brushType, bool isBrush)
+        {
+            switch (brushType)
+            {
+                case BrushType.Grey:
+                    if (isBrush)
+                    {
+                        if (type == ComicType.Bubble)
+                        {
+                            Bubble();
+                        }
+                        else
+                        {
+                            _colorBrush.enabled = true;
+                            AudioManager.Instance.PlaySoundEffect("ShowColor");
+                        }
+                    }
+                    break;
+                case BrushType.Color:
+                    if (isBrush)
+                    {
+                        //播放配音
+                        string dubbingName = type == ComicType.Bubble
+                            ? ComicData.bubbleTextDubbing[_bubbleType]
+                            : ComicData.textDubbing;
+                        TextDubbingManager.Instance.Play(dubbingName);
+                        _greyBrush.Clear();
+                        CheckType();
+                    }
+                    else
+                    {
+                        //DestroyImmediate(gameObject);
+                    }
+                    break;
+            }
         }
     }
 }
