@@ -12,6 +12,8 @@ public class TitleCamera : MonoBehaviourSingleton<TitleCamera>
    private float _moveTime = 0.5f;
    private void Awake()
    {
+      //之后统一做摄像机系统
+      return;
       _camera = GetComponent<Camera>();
       Sequence sequence = DOTween.Sequence();
       sequence.AppendInterval(2);

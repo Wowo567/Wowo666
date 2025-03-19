@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Comic;
 using Sirenix.OdinInspector;
 using TextDubbing;
@@ -55,9 +56,8 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     void Start()
     {
         _datasDic = DatasManager.Instance.comicItemDatas.DatasDic;
-        _comicItems = new ComicItem[10];
+        _comicItems = new ComicItem[15];
         curComic = Instantiate(firstComic, PaperManager.Instance.CurComicsTrans).GetComponent<ComicItem>();
-        //Debug.Log("position-----"+gameObject.name+"   "+curComic.transform.localPosition );
         _comicItems[0] = curComic;
         _index += 1;
         Debug.Log($"CreateComic {!curComic} {curComic.name} ");
@@ -94,6 +94,7 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
 
     public void RemoveComic(ComicItem comicItem)
     {
+        Debug.Log("RemoveComic===========");
         int comicIndex = -1;
         for (int i = 0; i < _comicItems.Length; i++)
         {
@@ -105,20 +106,30 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
             }
         }
 
+        //隐藏Continue
+        PaperManager.Instance.HideContinue();
+        
+        //把要移除漫画格的合成为一张图片1
         if (comicIndex >= 0)
         {
+            _comicItems[comicIndex].Reset();
             curComic = _comicItems[comicIndex];
+            List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
+            spriteRenderers.Add(curComic.GetComponentInChildren<SpriteMerger>(true).NewSpriteRenderer);
+
             for (int i = comicIndex+1; i < _comicItems.Length; i++)
             {
                 if (_comicItems[i] != null)
                 {
-                    _comicItems[i].Remove();
+                    spriteRenderers.Add(_comicItems[i].GetComponentInChildren<SpriteMerger>(true).NewSpriteRenderer);
+                    //_comicItems[i].Remove();
                     _comicItems[i] = null;
                 }
             }
+            SpriteMerger_Page.Instance.MergeAndReplace(spriteRenderers);
         }
     }
-
+    
     public void NextPage()
     {
         _index = 0;
@@ -126,5 +137,13 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
         {
             _comicItems[i] = null;
         }
+    }
+
+    public void OnSkip()
+    {
+        //当前漫画格直接播放完
+        _curComic.OnSkip();
+        //当前配音直接停止
+        TextDubbingManager.Instance.OnSkip();
     }
 }

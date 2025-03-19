@@ -7,7 +7,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using WowoFramework.Singleton;
+using WowoFramework.Singleton; 
 
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {

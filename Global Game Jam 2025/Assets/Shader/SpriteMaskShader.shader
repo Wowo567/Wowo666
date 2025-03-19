@@ -2,19 +2,19 @@ Shader "Custom/SpriteMaskShader"
 {
     Properties
     {
-        _MainTex ("Main Texture", 2D) = "white" {}  // 主要 Sprite 贴图
-        _MaskTex ("Mask Texture", 2D) = "white" {}  // Mask 贴图
-        _MaskPos ("Mask Position", Vector) = (0,0,0,0) // Mask 位置
-        _MaskSize ("Mask Size", Vector) = (1,1,1,1)   // Mask 大小（世界单位）
+        _MainTex ("Main Texture", 2D) = "white" {}  
+        _MaskTex ("Mask Texture", 2D) = "white" {}  
+        _MaskPos ("Mask Position", Vector) = (0,0,0,0) 
+        _MaskSize ("Mask Size", Vector) = (1,1,1,1)   
     }
     SubShader
     {
-        Tags { "Queue"="Transparent" }
+        Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
         Pass
         {
             Cull Off
             ZWrite Off
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha // 预乘 Alpha 混合
 
             CGPROGRAM
             #pragma vertex vert
@@ -36,8 +36,8 @@ Shader "Custom/SpriteMaskShader"
 
             sampler2D _MainTex;
             sampler2D _MaskTex;
-            float4 _MaskPos;  // Mask 世界坐标
-            float4 _MaskSize; // Mask 大小（世界单位）
+            float4 _MaskPos;  
+            float4 _MaskSize; 
 
             v2f vert (appdata_t v)
             {
@@ -45,10 +45,10 @@ Shader "Custom/SpriteMaskShader"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
 
-                // 获取 Sprite 世界坐标
+                // 计算世界坐标
                 float2 worldPos = mul(unity_ObjectToWorld, v.vertex).xy;
 
-                // 计算 Mask UV，修正缩放问题
+                // 计算 Mask UV
                 o.maskUV = (worldPos - _MaskPos.xy) / _MaskSize.xy + 0.5;
 
                 return o;
@@ -56,11 +56,16 @@ Shader "Custom/SpriteMaskShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 color = tex2D(_MainTex, i.uv);  // 主要 Sprite 颜色
-                fixed4 mask = tex2D(_MaskTex, i.maskUV);  // 采样 Mask 贴图
+                fixed4 color = tex2D(_MainTex, i.uv);  
+                fixed4 mask = tex2D(_MaskTex, i.maskUV);  
 
-                // 只让 Mask 贴图的白色区域可见
-                color.a *= mask.r;
+                // **透明度正确计算**
+                float maskAlpha = mask.r; //只取 Mask 的红色通道作为 Alpha
+                color.rgb *= color.a; //预乘 Alpha，确保混合正确
+                color.a *= maskAlpha; //透明度受到 Mask 影响
+
+                // **确保透明区域不被错误渲染**
+                clip(color.a - 0.01);
 
                 return color;
             }
@@ -68,4 +73,3 @@ Shader "Custom/SpriteMaskShader"
         }
     }
 }
-å

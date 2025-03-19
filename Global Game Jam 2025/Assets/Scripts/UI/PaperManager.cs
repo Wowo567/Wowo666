@@ -12,12 +12,17 @@ namespace UI
         [SerializeField, LabelText("纸页预制体")] private GameObject paperPrefab;
         [SerializeField, LabelText("已完成纸堆")] private Transform finishedStackTrans;
         [SerializeField, LabelText("绘制中纸堆")] private Transform paintingPapers;
-        
+        [SerializeField, LabelText("钢笔")] private Transform pen;
+        [SerializeField, LabelText("橡皮")] private Transform eraser;
+      
         private Transform _curPaper;
         private Transform _comicsTrans;
 
         public Transform CurPaper => _curPaper;
         public Transform CurComicsTrans => _comicsTrans;
+        
+        public Transform Pen => pen;
+        public Transform Eraser => eraser;
         
         [Button("换纸")]
         public void CreateNewPaper()
@@ -62,6 +67,11 @@ namespace UI
             _curPaper.Find("continue").gameObject.SetActive(true);
             _curPaper.Find("continue").GetComponent<SpriteRenderer>().color = new UnityEngine.Color(1, 1, 1, 0);
             _curPaper.Find("continue").GetComponent<SpriteRenderer>().DOFade(1, 0.5f);
+        }
+        
+        public void HideContinue()
+        {
+            _curPaper.Find("continue").gameObject.SetActive(false);
         }
     }
 }

@@ -1,7 +1,14 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using WowoFramework.Singleton;
+
+public enum TextDubbingType
+{
+    NoText,
+    HaveText
+}
 
 namespace TextDubbing
 {
@@ -12,6 +19,7 @@ namespace TextDubbing
         public string curClipName { get; private set; }
         public bool curClipFinish { get; private set; }
 
+        public TextDubbingType type;
 
         private void Awake()
         {
@@ -22,7 +30,7 @@ namespace TextDubbing
         public void Play(string name)
         {
             curClipFinish = false;
-            AudioClip clip = Resources.Load<AudioClip>(Path + name);
+            AudioClip clip = Resources.Load<AudioClip>(Path + type + "/" + name);
             if (clip == null)
             {
                 Debug.LogError("NO TextDubbing CLIP:" + name);
@@ -33,6 +41,13 @@ namespace TextDubbing
                 _audioSource.PlayOneShot(clip);
                 StartCoroutine(WaitForAudioEnd());
             }
+        }
+
+        public void OnSkip()
+        {
+            _audioSource.Stop();
+            curClipFinish = true;
+            Debug.Log("配音跳过");
         }
 
         //播放完是出现下一格漫画

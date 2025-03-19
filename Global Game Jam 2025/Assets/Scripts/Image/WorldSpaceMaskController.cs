@@ -2,22 +2,23 @@ using System;
 using Comic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [ExecuteInEditMode]  // 让脚本在编辑器模式下运行
 [RequireComponent(typeof(SpriteRenderer))]
 public class WorldSpaceMaskController : MonoBehaviour
 {
-    public bool isBackground = false;
+    public bool ignore = false;
     private SpriteRenderer maskRenderer;  // 拖入场景中的 Mask 物体
     private Material material;
     private SpriteRenderer _spriteRenderer;
 
     private void Awake()
     {
-        maskRenderer =transform.parent.GetComponentInChildren<BrushTextureSprite>().GetComponent<SpriteRenderer>();
+        maskRenderer = transform.parent.GetComponentInChildren<BrushTextureSprite>().GetComponent<SpriteRenderer>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        isBackground = gameObject.name.ToUpper().Contains("BG");
-        string shaderName = isBackground ? "SpriteMaskShader_Background" : "SpriteMaskShader";
+        ignore = gameObject.name.ToUpper().Contains("BG")||gameObject.name.ToUpper().Contains("BUBBLE");
+        string shaderName = ignore ? "SpriteMaskShader_Background" : "SpriteMaskShader";
         _spriteRenderer.material = new Material(Shader.Find("Custom/"+shaderName));
 
         // 获取贴图
@@ -25,7 +26,8 @@ public class WorldSpaceMaskController : MonoBehaviour
         _spriteRenderer.sharedMaterial.SetTexture("_MainTex", mainTexture);
         material = GetComponent<SpriteRenderer>().sharedMaterial;  // 获取共享材质
     }
-    
+
+  
     void Start()
     {
         ApplyMaskSettings();
@@ -45,11 +47,12 @@ public class WorldSpaceMaskController : MonoBehaviour
     {
         ApplyMaskSettings();  // 确保进入 Play Mode 或 退出 Play Mode 时参数正确
     }
-
+    
     void ApplyMaskSettings()
     {
         if (maskRenderer == null) return;
-
+        
+        
         if (material != null)
         {
             // 获取 Mask 贴图
