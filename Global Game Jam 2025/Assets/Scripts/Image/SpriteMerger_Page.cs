@@ -11,12 +11,13 @@ using WowoFramework.Singleton;
 public class SpriteMerger_Page : MonoBehaviourSingleton<SpriteMerger_Page>
 {
     private Transform _newSpriteRenderer; // 需要变成最新的SpriteRenderer的物体
-    public Vector2 offest;
+    //public Vector2 offest;
 
     private bool _started;
     private List<SpriteRenderer> _spriteRenderers;
     private Vector3 _originalCenter;
     private float _newSpritePosZ = -3;
+    
     private void Prepare()
     {
         _started = true;
@@ -30,7 +31,6 @@ public class SpriteMerger_Page : MonoBehaviourSingleton<SpriteMerger_Page>
             sr.material = new Material(Shader.Find("Sprites/Default"));
         }
     }
-    
 
     public void MergeAndReplace(List<SpriteRenderer> spriteRenderers)
     {       
@@ -137,8 +137,8 @@ public class SpriteMerger_Page : MonoBehaviourSingleton<SpriteMerger_Page>
         cam.orthographic = true;
         cam.orthographicSize = bounds.size.y / 2 + borderSize / 100f;;
         cam.targetTexture = rt;
-        cam.transform.position = new Vector3(bounds.center.x + offest.x, bounds.center.y + offest.y, -10);
-        //cam.transform.position = new Vector3(bounds.center.x, bounds.center.y, -10);
+        //cam.transform.position = new Vector3(bounds.center.x + offest.x, bounds.center.y + offest.y, -10);
+        cam.transform.position = new Vector3(bounds.center.x, bounds.center.y, -10);
 
         // **临时修改 Layer 让相机只渲染这些 SpriteRenderer**
         List<int> originalLayers = new List<int>();

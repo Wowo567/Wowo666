@@ -90,7 +90,6 @@ namespace Comic
             
             AddComponents();
             _animator = GetComponent<Animator>();
-            _spriteMerger = GetComponentInChildren<SpriteMerger>();
             Init();
         }
 
@@ -102,6 +101,10 @@ namespace Comic
         
         private void AddComponents()
         {      
+            //添加合并图片
+            _spriteMerger = GetComponentInChildren<SpriteMerger>() ?? _colorTrans.AddComponent<SpriteMerger>();
+
+            
             foreach (var item in transform.Find("Content").GetComponentsInChildren<SpriteRenderer>())
             {
                 //不是蒙版则受影响
