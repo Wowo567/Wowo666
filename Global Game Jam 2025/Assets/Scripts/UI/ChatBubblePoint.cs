@@ -48,6 +48,13 @@ namespace UI
             Debug.Log($"触发气泡类型 {(BubbleType)chatBubbleID}");
         }
         
+        public void ResetBubble()
+        {
+            ChatBubbleManager.Instance.ResetBubble(_curChatBubbleID);
+            Debug.Log($"归还气泡类型 {(BubbleType)_curChatBubbleID}");
+            _curChatBubbleID = -1;
+        }
+        
         public void Release()
         {
             ChatBubbleManager.Instance.ResetBubble(_curChatBubbleID);

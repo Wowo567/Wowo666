@@ -39,7 +39,7 @@ namespace UI
                 ChatBubblePoint[] points = finishedPaper.GetComponentsInChildren<ChatBubblePoint>();
                 foreach (ChatBubblePoint point in points)
                 {
-                    //point.Release();
+                    point.ResetBubble();
                 }
                 finishedPaper.SetParent(finishedStackTrans,true);
                 Sequence seq = DOTween.Sequence();
