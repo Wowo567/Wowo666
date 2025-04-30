@@ -57,6 +57,11 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
             _isFirstContinue = false;
         }
         PaperManager.Instance.CreateNewPaper();
+    }
+    
+    public void InvokeContinue()
+    {
+        Debug.Log("OnContinue?.Invoke()");
         OnContinue?.Invoke();
     }
 

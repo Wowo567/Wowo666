@@ -39,10 +39,12 @@ namespace UI
                 ChatBubblePoint[] points = finishedPaper.GetComponentsInChildren<ChatBubblePoint>();
                 foreach (ChatBubblePoint point in points)
                 {
-                    point.Release();
+                    //point.Release();
                 }
                 finishedPaper.SetParent(finishedStackTrans,true);
-                finishedPaper.DOLocalMove(new Vector3(0, 0, 0), 1.0f).OnComplete(() =>
+                Sequence seq = DOTween.Sequence();
+                seq.Append(finishedPaper.DOLocalMove(new Vector3(0, 0, 0), 1.0f));
+                seq.AppendCallback(() =>
                 {
                     if (finishedStackTrans.childCount > 1)
                     {
@@ -52,7 +54,12 @@ namespace UI
                     {
                         spriteRenderer.sortingOrder = 0;
                     }
-                });   
+                });
+                //seq.AppendInterval(3f); // 延迟显示
+                seq.AppendCallback(() =>
+                {
+                    GameManager.Instance.InvokeContinue();
+                });
             }
 
             _curPaper = Instantiate(paperPrefab, paintingPapers).transform;

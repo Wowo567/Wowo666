@@ -196,6 +196,7 @@ namespace Comic
         private void ClickTransition()
         {
             CheckAnim();
+            Debug.Log("GameManager.Instance.OnContinue ClickTransition");
             GameManager.Instance.OnContinue += OnContinue;
             Sequence sequence = DOTween.Sequence();
             
@@ -271,6 +272,8 @@ namespace Comic
             GameManager.Instance.OnContinue += OnContinue;
             Sequence sequence = DOTween.Sequence();
             
+            Debug.Log("GameManager.Instance.OnContinue ClickTransitionBubble");
+
             //出现Continue
             sequence.AppendCallback(() => ShowContinue());
 
@@ -334,7 +337,6 @@ namespace Comic
         {
             if (_haveBubble)
             { 
-                Debug.Log("BubbleShow");
                 ColorBrush.enabled = false;
                 _colorTrans.gameObject.SetActive(true);
                 ChatBubbleManager.Instance.HideUI();
@@ -397,11 +399,13 @@ namespace Comic
         
         private void OnContinue()
         {
+            RemoveAction();
             AudioManager.Instance.PlaySoundEffect("Remove");
             int next = ComicData.nextComics[BubbleType.Tell];
             ComicManager.Instance.NextPage();
+            Debug.Log("id"+id+"OnContinue next"+next);
             ComicManager.Instance.CreateComic(next);
-            CameraManager.Instance.ChangeView();
+            CameraManager.Instance.ChangeView();//之后统一管镜头移动
         }
 
         private void OnBubbleRemove()
@@ -434,6 +438,7 @@ namespace Comic
 
         private void RemoveAction()
         {
+            Debug.Log("OnContinue RemoveAction");
             if (GameManager.Instance != null) GameManager.Instance.OnContinue -= OnContinue;
             if (type == ComicType.Bubble && _point != null)
             {
@@ -500,10 +505,12 @@ namespace Comic
             ColorBrush.ShowAll();
             _animator.SetInteger("Type", (int)(_bubbleType+1));
             _animator.Play("Type" + (int)(_bubbleType + 1), 0, 1.0f);
-            if (type == ComicType.ClickTransition)
+            if (type == ComicType.ClickTransition || type == ComicType.ClickTransitionBubble)
             {
                 ShowContinue();
                 CameraManager.Instance.Recover();
+                Debug.Log("OnContinue OnSkip");
+                GameManager.Instance.OnContinue += OnContinue;
             }
 
             AnimFinish();

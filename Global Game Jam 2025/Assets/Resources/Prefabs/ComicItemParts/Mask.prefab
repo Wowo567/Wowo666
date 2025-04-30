@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 64e77ccdf5f824aeebb10574fe28d39d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dd3530a4ae00447c189bdcfbcd35cf84, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,4 +100,3 @@ MonoBehaviour:
   targetSprite: {fileID: 6095733930389894739}
   brushRadius: 130
   speed: 2500
-  isBrush: 1
