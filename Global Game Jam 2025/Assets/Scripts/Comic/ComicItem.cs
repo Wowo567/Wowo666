@@ -11,6 +11,7 @@ using UI;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Sequence = DG.Tweening.Sequence;
 
 namespace Comic
@@ -45,9 +46,7 @@ namespace Comic
         //private Color[]  _color;
         private Dictionary<BubbleType, SpriteRenderer> _bubbleSprites;
         private Transform _greyTrans, _colorTrans;
-
-        private float _fadeTime = 0.5f;
-
+        
         // 用来存储物体的 transform.position
         [ShowInInspector]  // 让这个变量出现在Inspector中
         public Vector3 recordedPosition;
@@ -87,6 +86,7 @@ namespace Comic
             AddMask();
             GreyBrush =_greyTrans.GetComponentInChildren<BrushTextureSprite>();
             ColorBrush =_colorTrans.GetComponentInChildren<BrushTextureSprite>();
+            _colorTrans.localPosition = new Vector3(_colorTrans.localPosition.x, _colorTrans.localPosition.y, -0.5f);
             
             AddComponents();
             _animator = GetComponent<Animator>();
@@ -121,11 +121,14 @@ namespace Comic
                 }
                 
                 //Mask的位置是Grey的背景的位置
-                if(item.gameObject.name.ToUpper().Contains("BG")&&item.transform.parent.name.ToUpper().Contains("GREY"))
+                if (item.gameObject.name.ToUpper().Contains("BG") &&
+                    item.transform.parent.name.ToUpper().Contains("GREY"))
                 {
                     Debug.Log("Mask的位置是Grey的背景的位置");
-                    GreyBrush.transform.position = item.transform.position;
-                    ColorBrush.transform.position = item.transform.position;
+                    GreyBrush.transform.localScale = item.transform.localScale;
+                    ColorBrush.transform.localScale = item.transform.localScale;
+                    GreyBrush.transform.position = new Vector3(item.transform.position.x, item.transform.position.y, GreyBrush.transform.position.z);
+                    ColorBrush.transform.position = new Vector3(item.transform.position.x, item.transform.position.y, ColorBrush.transform.position.z);
                 }
             }
         }
@@ -178,6 +181,7 @@ namespace Comic
 
         private void AnimFinish()
         {   
+            Debug.Log("AnimFinish1");
             animPlayFinish = true;
             if (_spriteMerger != null)
             {
@@ -269,11 +273,15 @@ namespace Comic
         
         private void ClickTransitionBubble()
         {
+            CheckAnim();
             GameManager.Instance.OnContinue += OnContinue;
+            Debug.Log(id+"ShowAnim-------"+_animTime);
             Sequence sequence = DOTween.Sequence();
             
             Debug.Log("GameManager.Instance.OnContinue ClickTransitionBubble");
-
+            
+            // 显示动画
+            sequence.AppendCallback(ShowAnim).AppendInterval(_animTime);
             //出现Continue
             sequence.AppendCallback(() => ShowContinue());
 
@@ -322,12 +330,12 @@ namespace Comic
 
         private void OnBubble(BubbleType type)
         {
+            _bubbleType = type;
             //如果有气泡了隐藏之前的气泡并把其他格子都删除
             if (_haveBubble)
             {
                 _bubbleSprites[_bubbleType].enabled = false;
                 ComicManager.Instance.RemoveComic(this);
-                _bubbleType = type;
                 return;
             }
             BubbleShow();
@@ -372,6 +380,7 @@ namespace Comic
 
         private void ShowNext()
         {
+            Debug.Log("_bubbleType"+_bubbleType);
             int next = ComicData.nextComics[_bubbleType];
             if (next == 0)
             {
@@ -500,6 +509,18 @@ namespace Comic
         public void OnSkip()
         {
             if (animPlayFinish) return;
+            //如果是气泡类型且还没拖气泡
+            if (type == ComicType.Bubble && _haveBubble == false)
+            {
+                if (_point == null)
+                {
+                    GreyBrush.ShowAll();
+                    Bubble();
+                    ShowFinish();
+                }
+                return;
+            }
+
             GreyBrush.Clear();
             ColorBrush.enabled = true;
             ColorBrush.ShowAll();
@@ -514,7 +535,6 @@ namespace Comic
             }
 
             AnimFinish();
-            //ShowFinish();
         }
     }
 }

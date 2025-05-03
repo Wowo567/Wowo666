@@ -74,7 +74,6 @@ public class ComicManager : MonoBehaviourSingleton<ComicManager>
     {
         if (curComic.animPlayFinish && TextDubbingManager.Instance.curClipFinish)
         {
-            Debug.Log("curComic.ShowFinish()====="+curComic.gameObject.name);
             curComic.ShowFinish();
         }
     }

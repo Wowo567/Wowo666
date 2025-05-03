@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using Comic;
+using Sirenix.OdinInspector;
 
 public class SpriteMerger : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class SpriteMerger : MonoBehaviour
         }
     }
 
+    [Button("记录位置")]
     public void MergeAndReplace()
     {       
         if (_started) return;
@@ -54,6 +56,9 @@ public class SpriteMerger : MonoBehaviour
         
         // **4️⃣ 创建新的 `Sprite` 并赋值**
         NewSpriteRenderer.sprite = Sprite.Create(mergedTexture, new Rect(0, 0, textureWidth, textureHeight), new Vector2(0.5f, 0.5f));
+        //为什么最后一帧透明像素显示会有问题？
+        //NewSpriteRenderer.material = new Material(Shader.Find("Custom/SpriteMaskShader_Background"));
+       
         // **设置新物体的位置为原中心点**
         NewSpriteRenderer.transform.position = new Vector3(_originalCenter.x, _originalCenter.y, targetParent.position.z+_newSpritePosZ);
 
@@ -126,7 +131,7 @@ public class SpriteMerger : MonoBehaviour
         // **清理**
         RenderTexture.active = null;
         cam.targetTexture = null;
-        Destroy(tempCamObj);
+        DestroyImmediate(tempCamObj);
         rt.Release();
 
         Debug.Log("Sprite 合成完成！");

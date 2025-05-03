@@ -59,6 +59,8 @@ public class BrushTextureSprite : MonoBehaviour
     private int _noChangeFrameCount = 0;
     private const int MaxNoChangeFrames = 30; // 超过30帧都没变，就当作完成
 
+    private int _speedParam = 4;
+
     private void Awake()
     {
         _comicItem = GetComponentInParent<ComicItem>();
@@ -118,9 +120,9 @@ public class BrushTextureSprite : MonoBehaviour
         _texturePixels = new Color[_texture.width * _texture.height];
         _totalPixels = CountNonTransparentPixels();
         
-        // ✅ 根据图片尺寸设置速度
+        //根据图片尺寸设置速度
         float diag = Mathf.Sqrt(_texture.width * _texture.width + _texture.height * _texture.height);
-        speed = 4 * diag / targetBrushTime;
+        speed = _speedParam * diag / targetBrushTime;
         
         Clear(true);
         UpdateSpriteTexture();
