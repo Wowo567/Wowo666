@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 14
-  type: 3
+  type: 4
   recordedPosition: {x: -0.03, y: -4.41, z: -0.5}
 --- !u!95 &3177098871069157273
 Animator:
@@ -338,7 +338,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4489445054747181805
 Transform:
   m_ObjectHideFlags: 0

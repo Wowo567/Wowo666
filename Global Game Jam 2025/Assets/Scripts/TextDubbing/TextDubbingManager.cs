@@ -20,6 +20,8 @@ namespace TextDubbing
         public bool curClipFinish { get; private set; }
 
         public TextDubbingType type;
+        
+        public float CurrentClipLength => _audioSource.clip != null ? _audioSource.clip.length : 0f;
 
         private void Awake()
         {
