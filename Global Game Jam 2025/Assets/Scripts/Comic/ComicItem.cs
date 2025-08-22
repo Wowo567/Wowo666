@@ -110,7 +110,13 @@ namespace Comic
                 //不是蒙版则受影响
                 if (!item.name.Contains("Mask"))
                 {
-                    item.AddComponent<WorldSpaceMaskController>();
+                    bool ignore = false;
+                    ComicItem_Color comicItemColor = item.GetComponent<ComicItem_Color>();
+                    if (comicItemColor != null)
+                    {
+                        ignore = comicItemColor.IgnoreMask;
+                    }
+                    item.AddComponent<WorldSpaceMaskController>().Init(ignore);
                 }
                 
                 if (item.name.Contains("Bubble"))

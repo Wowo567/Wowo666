@@ -7,7 +7,7 @@ public class ImageBorderGenerator : EditorWindow
 {
     private string sourceFolder = "Assets/Arts/xihua1heibai";
     private string outputFolder = "Assets/Resources/Masks";
-    private int borderSize = 200;
+    private int borderSize = 300;
 
     [MenuItem("Tools/Generate Image Borders")]
     public static void ShowWindow()
@@ -47,7 +47,7 @@ public class ImageBorderGenerator : EditorWindow
             if ((file.EndsWith(".png") || file.EndsWith(".jpg")) && file.FileOrDirectoryName().Contains("BG"))
             {
                 Debug.Log("AddBorderToImage: " + file);
-                StaticAddBorderToImage(file, outputFolder);
+                StaticAddBorderToImage(file, outputFolder, borderSize, useCustomBorder: true);
             }
         }
 
@@ -72,18 +72,22 @@ public class ImageBorderGenerator : EditorWindow
         Debug.LogWarning($"Skipping {filePath}: No valid white region found.");
         return;
     }
-
+    
+    // 计算内容区域
     int newWidth = Xmax - Xmin;
     int newHeight = Ymax - Ymin;
 
     // 自动 or 手动选择 borderSize
-    int borderSize = useCustomBorder ? customBorderSize : (int)(0.15f * Mathf.Max(newWidth, newHeight));
-    
-    // 确保边框均匀分布 - 关键是保持原始图像在中心
-    int totalWidth = newWidth + 2 * borderSize;
-    int totalHeight = newHeight + 2 * borderSize;
+    int borderSize = useCustomBorder ? customBorderSize : (int)(0.18f * Mathf.Max(newWidth, newHeight));
 
-    Texture2D newTexture = new Texture2D(totalWidth, totalHeight, TextureFormat.RGBA32, false);
+    // 保证宽高为 4 的倍数
+    int totalWidth = Mathf.CeilToInt((newWidth + 2 * borderSize) / 4f) * 4;
+    int totalHeight = Mathf.CeilToInt((newHeight + 2 * borderSize) / 4f) * 4;
+
+    // 创建新贴图（注意用 RGB24，因为 JPG 没有透明度）
+    Texture2D newTexture = new Texture2D(totalWidth, totalHeight, TextureFormat.RGB24, false);
+
+   
     Color white = Color.white;
     Color black = Color.black;
 
@@ -118,9 +122,10 @@ public class ImageBorderGenerator : EditorWindow
     }
 
     newTexture.Apply();
+    ExpandMask(newTexture, -4);
 
     string fileName = Path.GetFileNameWithoutExtension(filePath).Replace("BG", "");
-    string outputPath = Path.Combine(outputFolder, "Mask" + fileName + ".png");
+    string outputPath = Path.Combine(outputFolder, "Mask" + fileName + ".jpg");
     
     // 如果文件已存在，跳过生成
     if (File.Exists(outputPath))
@@ -129,14 +134,18 @@ public class ImageBorderGenerator : EditorWindow
         return;
     }
     
-    File.WriteAllBytes(outputPath, newTexture.EncodeToPNG());
+    // 指定压缩质量，比如 75
+    File.WriteAllBytes(outputPath,  newTexture.EncodeToJPG(75));
 
     AssetDatabase.ImportAsset(outputPath);
     TextureImporter importer = AssetImporter.GetAtPath(outputPath) as TextureImporter;
     if (importer != null)
     {
         importer.isReadable = true;
-        importer.textureCompression = TextureImporterCompression.Uncompressed;
+        importer.textureCompression = TextureImporterCompression.Compressed;
+        
+        // 如果图片超过2048，就把 maxSize 提高到 4096
+        importer.maxTextureSize = newTexture.width > 2048 || newTexture.height > 2048 ? 4096 : 2048;
         
         // 确保与原始图像使用相同的导入设置
         TextureImporter originalImporter = AssetImporter.GetAtPath(filePath) as TextureImporter;
@@ -199,6 +208,88 @@ public class ImageBorderGenerator : EditorWindow
             Ymax = height;
         }
     }
+    
+    public static void ExpandMask(Texture2D tex, int size)
+{
+    if (size == 0) return;
+
+    int width = tex.width;
+    int height = tex.height;
+    Color32[] pixels = tex.GetPixels32();
+    Color32[] newPixels = new Color32[pixels.Length];
+
+    // 复制原图，初始全部黑色
+    for (int i = 0; i < newPixels.Length; i++) newPixels[i] = Color.black;
+
+    if (size > 0)
+    {
+        // 膨胀：白色点向外扩展 size 像素
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int index = y * width + x;
+                if (pixels[index].r > 200) // 白色点
+                {
+                    for (int dy = -size; dy <= size; dy++)
+                    {
+                        for (int dx = -size; dx <= size; dx++)
+                        {
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                            {
+                                newPixels[ny * width + nx] = Color.white;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        // 收缩：白色点只保留周围 size 范围内都为白色的像素
+        int absSize = -size;
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int index = y * width + x;
+                if (pixels[index].r > 200) // 白色点
+                {
+                    bool keep = true;
+                    // 检查周围 absSize 范围内是否有黑色点
+                    for (int dy = -absSize; dy <= absSize && keep; dy++)
+                    {
+                        for (int dx = -absSize; dx <= absSize && keep; dx++)
+                        {
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                            {
+                                if (pixels[ny * width + nx].r < 200)
+                                {
+                                    keep = false;
+                                }
+                            }
+                            else
+                            {
+                                keep = false; // 边界也视为黑色
+                            }
+                        }
+                    }
+                    if (keep) newPixels[index] = Color.white;
+                }
+            }
+        }
+    }
+
+    tex.SetPixels32(newPixels);
+    tex.Apply();
+}
+
+
 }
 
 public class ImageBorderContextMenu

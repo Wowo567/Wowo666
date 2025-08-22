@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(SpriteRenderer))]
 public class WorldSpaceMaskController : MonoBehaviour
 {
-    public bool ignore = false;
+    private bool _ignore = false;
     private SpriteRenderer maskRenderer;  // 拖入场景中的 Mask 物体
     private Material material;
     private SpriteRenderer _spriteRenderer;
@@ -17,8 +17,21 @@ public class WorldSpaceMaskController : MonoBehaviour
     {
         maskRenderer = transform.parent.GetComponentInChildren<BrushTextureSprite>().GetComponent<SpriteRenderer>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        ignore = gameObject.name.ToUpper().Contains("BG")||gameObject.name.ToUpper().Contains("BUBBLE");
-        string shaderName = ignore ? "SpriteMaskShader_Background" : "SpriteMaskShader";
+        /*_ignore = gameObject.name.ToUpper().Contains("BG")||gameObject.name.ToUpper().Contains("BUBBLE")||gameObject.name.ToUpper().Contains("IGNORE");
+        string shaderName = _ignore ? "SpriteMaskShader_Background" : "SpriteMaskShader";
+        _spriteRenderer.material = new Material(Shader.Find("Custom/"+shaderName));
+
+        // 获取贴图
+        Texture mainTexture = _spriteRenderer.sprite.texture;
+        _spriteRenderer.sharedMaterial.SetTexture("_MainTex", mainTexture);
+        material = GetComponent<SpriteRenderer>().sharedMaterial;  // 获取共享材质
+        */
+    }
+
+    public void Init(bool ignore)
+    {
+        _ignore = ignore || gameObject.name.ToUpper().Contains("BG")||gameObject.name.ToUpper().Contains("BUBBLE");
+        string shaderName = _ignore ? "SpriteMaskShader_Background" : "SpriteMaskShader";
         _spriteRenderer.material = new Material(Shader.Find("Custom/"+shaderName));
 
         // 获取贴图

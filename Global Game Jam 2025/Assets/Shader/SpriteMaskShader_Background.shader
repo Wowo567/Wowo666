@@ -14,7 +14,7 @@ Shader "Custom/SpriteMaskShader_Background"
         {
             Cull Off
             ZWrite Off
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
 
             CGPROGRAM
             #pragma vertex vert
@@ -56,11 +56,17 @@ Shader "Custom/SpriteMaskShader_Background"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 color = tex2D(_MainTex, i.uv);  // 主要 Sprite 颜色
-                fixed4 mask = tex2D(_MaskTex, i.maskUV);  // 采样 Mask 贴图
+                fixed4 color = tex2D(_MainTex, i.uv);
+                fixed4 mask = tex2D(_MaskTex, i.maskUV);
 
-                // 只让 Mask 贴图的白色区域可见
+                // 预乘处理
+                color.rgb *= color.a;
+
+                // 只根据 mask 的 alpha 决定透明度，不受颜色影响
                 color.a *= mask.a;
+
+                // 丢弃完全透明的片段，避免残影
+                clip(color.a - 0.01);
 
                 return color;
             }
